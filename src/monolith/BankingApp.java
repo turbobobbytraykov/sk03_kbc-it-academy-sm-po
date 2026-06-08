@@ -51,6 +51,7 @@ public class BankingApp {
 
     // --- MAIN: All modules run together ---
     public static void main(String[] args) {
+
         BankingApp app = new BankingApp();
 
         System.out.println("=== MONOLITH: All modules in one application ===\n");
