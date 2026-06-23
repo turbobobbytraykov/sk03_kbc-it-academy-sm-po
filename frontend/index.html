@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!--
+    ✏️  TASK 1a — Change the browser tab title
+    This text appears in the browser tab at the top of your screen.
+  -->
+  <title>Finance Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <div class="container">
+
+      <!--
+        ✏️  TASK 1b — Change the main heading
+        This is the large title shown at the top of the page.
+        Example: "UBB Banking Insights" or your team's name.
+      -->
+      <h1 id="dashboard-title">Finance Dashboard</h1>
+
+      <!--
+        ✏️  TASK 1c — Change the subtitle
+        A short description below the main heading.
+        Example: "Live market data for banking professionals"
+      -->
+      <p id="dashboard-subtitle">Real-time Exchange Rates &amp; Tax Information</p>
+
+    </div>
+  </header>
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <main class="container">
+    <div class="dashboard-grid">
+
+      <!-- ── Exchange Rate Card ── -->
+      <section class="card" id="exchange-rate-section">
+        <div class="card-header">
+          <h2>Currency Exchange Rate</h2>
+          <span class="badge">Live Data</span>
+        </div>
+
+        <!-- Data will be injected here by app.js -->
+        <div id="exchange-rate-content">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading exchange rate…</p>
+          </div>
+        </div>
+
+        <button class="btn" id="refresh-exchange">↻ Refresh Rate</button>
+      </section>
+
+      <!-- ── Income Tax Card ── -->
+      <section class="card" id="income-tax-section">
+        <div class="card-header">
+          <h2 id="tax-heading">Income Tax Brackets</h2>
+          <span class="badge badge-green" id="tax-badge">2026 Federal</span>
+        </div>
+
+        <div class="tax-filters">
+          <label for="filing-status">Filing Status:</label>
+          <select id="filing-status">
+            <!-- populated by JS after data loads -->
+          </select>
+        </div>
+
+        <!-- Data will be injected here by app.js -->
+        <div id="income-tax-content">
+          <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading tax brackets…</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="container">
+      <p>Data powered by <a href="https://api-ninjas.com" target="_blank" rel="noopener">API Ninjas</a>
+        &nbsp;·&nbsp; SYSTEMS & ARCHITECTURE UBB Course</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

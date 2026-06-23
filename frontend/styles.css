@@ -1,0 +1,409 @@
+/*
+  Finance Dashboard — Stylesheet
+  ================================
+  Students: you do NOT need to change this file.
+  It controls all the colors, fonts, and layout.
+*/
+
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --color-primary:       #1e3a5f;
+  --color-primary-hover: #162d4a;
+  --color-accent:        #2563eb;
+  --color-green:         #10b981;
+  --color-amber:         #f59e0b;
+  --color-red:           #ef4444;
+  --color-bg:            #f1f5f9;
+  --color-surface:       #ffffff;
+  --color-border:        #e2e8f0;
+  --color-text:          #1e293b;
+  --color-muted:         #64748b;
+  --shadow:    0 1px 3px rgba(0,0,0,.10), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,.10), 0 2px 4px -1px rgba(0,0,0,.06);
+  --radius:    12px;
+  --radius-sm: 6px;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1a4d8f 100%);
+  color: #fff;
+  padding: 2.5rem 0;
+  border-bottom: 4px solid rgba(255,255,255,.08);
+}
+
+header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+header p {
+  margin-top: .5rem;
+  font-size: 1.05rem;
+  opacity: .85;
+}
+
+/* ── Main ───────────────────────────────────────────────────── */
+main {
+  flex: 1;
+  padding: 2rem 0 3rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+  header h1 { font-size: 1.5rem; }
+}
+
+/* ── Card ───────────────────────────────────────────────────── */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.75rem;
+  border: 1px solid var(--color-border);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.card-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ── Badge ──────────────────────────────────────────────────── */
+.badge {
+  font-size: .7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: .25rem .6rem;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-green { background: #dcfce7; color: #15803d; }
+
+/* ── Loading Spinner ────────────────────────────────────────── */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .75rem;
+  padding: 2.5rem;
+  color: var(--color-muted);
+  font-size: .9rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Exchange Rate Display ──────────────────────────────────── */
+.exchange-display { text-align: center; padding: .5rem 0; }
+
+.currency-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.currency-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+}
+
+.currency-flag { font-size: 2.5rem; line-height: 1; }
+
+.currency-code {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+}
+
+.currency-name { font-size: .78rem; color: var(--color-muted); }
+
+.exchange-arrow {
+  font-size: 1.5rem;
+  color: var(--color-muted);
+  padding-bottom: 1.75rem;
+}
+
+.rate-display { margin: .5rem 0 .75rem; }
+
+.rate-value {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  letter-spacing: -.03em;
+}
+
+.rate-description { font-size: .95rem; color: var(--color-text); margin: .25rem 0; }
+
+.rate-inverse { font-size: .85rem; color: var(--color-muted); margin: .25rem 0; }
+
+.rate-updated {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  font-size: .8rem;
+  color: var(--color-muted);
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot-green { background: var(--color-green); }
+
+/* ── Tax Filters ────────────────────────────────────────────── */
+.tax-filters {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tax-filters label { font-size: .85rem; font-weight: 500; color: var(--color-muted); }
+
+.tax-filters select {
+  padding: .4rem .75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: .875rem;
+  color: var(--color-text);
+  background: #fff;
+  cursor: pointer;
+}
+
+.tax-info-label { font-size: .82rem; color: var(--color-muted); margin-bottom: .75rem; }
+
+/* ── Tax Table ──────────────────────────────────────────────── */
+.tax-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+
+.tax-table th {
+  text-align: left;
+  padding: .45rem .75rem;
+  font-size: .72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--color-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tax-table td {
+  padding: .55rem .75rem;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+
+.tax-table tr:last-child td { border-bottom: none; }
+
+.rate-badge {
+  display: inline-block;
+  padding: .2rem .5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: .875rem;
+}
+
+.rate-low  { background: #dcfce7; color: #15803d; }
+.rate-mid  { background: #fef9c3; color: #854d0e; }
+.rate-high { background: #ffedd5; color: #9a3412; }
+.rate-max  { background: #fee2e2; color: #991b1b; }
+
+.bracket-bar {
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 999px;
+  width: 80px;
+  overflow: hidden;
+}
+
+.bracket-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .5s ease;
+}
+
+.bracket-bar-fill.rate-low  { background: #4ade80; }
+.bracket-bar-fill.rate-mid  { background: #facc15; }
+.bracket-bar-fill.rate-high { background: #fb923c; }
+.bracket-bar-fill.rate-max  { background: #f87171; }
+
+/* ── Tax Calculator ─────────────────────────────────────────── */
+.tax-calculator {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.tax-calculator h3 { font-size: .95rem; font-weight: 600; margin-bottom: .35rem; }
+
+.tax-calculator > p { font-size: .85rem; color: var(--color-muted); margin-bottom: .75rem; }
+
+.calculator-input { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+
+.currency-prefix { font-weight: 600; font-size: 1.1rem; color: var(--color-muted); }
+
+.calculator-input input {
+  flex: 1;
+  min-width: 120px;
+  padding: .5rem .75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: .9rem;
+  color: var(--color-text);
+}
+
+.calculator-input input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+
+.calc-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .4rem 0;
+  font-size: .875rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.calc-row:last-of-type { border-bottom: none; }
+.calc-row span { color: var(--color-muted); }
+
+.rate-highlight { color: var(--color-accent); font-size: 1rem; }
+
+.calc-note {
+  margin-top: .6rem;
+  font-size: .75rem;
+  color: var(--color-muted);
+  padding-top: .5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.calc-error { color: var(--color-red); font-size: .875rem; margin-top: .5rem; }
+
+/* ── Error / Not-configured Card ───────────────────────────── */
+.error-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-muted);
+}
+
+.error-card h3 { margin: .5rem 0 .35rem; color: var(--color-text); font-size: 1rem; }
+.error-card p  { font-size: .875rem; margin-bottom: .25rem; }
+
+.error-card code {
+  background: #f1f5f9;
+  padding: .1rem .35rem;
+  border-radius: 4px;
+  font-size: .85em;
+  color: var(--color-primary);
+}
+
+.error-icon { font-size: 2rem; }
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .6rem 1.25rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: .875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s ease;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.btn:hover { background: var(--color-primary-hover); }
+
+.btn-small {
+  padding: .5rem 1rem;
+  width: auto;
+  margin-top: 0;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+footer {
+  background: var(--color-primary);
+  color: rgba(255,255,255,.65);
+  padding: 1.25rem 0;
+  font-size: .85rem;
+  text-align: center;
+}
+
+footer a { color: rgba(255,255,255,.9); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
