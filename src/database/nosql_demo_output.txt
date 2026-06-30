@@ -1,0 +1,85 @@
+Generated : 2026-06-30 11:47:22
+Log file  : src/database/nosql_demo_output.txt
+
+╔══════════════════════════════════════════════════════════╗
+║    NoSQL — Banking with a Document Database (MongoDB)    ║
+╚══════════════════════════════════════════════════════════╝
+
+┌─ MongoDB command sent to database ─────────────────────
+│  db.accounts.insertOne({
+│    _id: 'acc_001',
+│    owner: 'Jan Janssen',
+│    balance: 1200.00,
+│    iban: 'BE68 5390 0754 7034',
+│    customerProfile: { tier: 'gold', since: 2018 }
+│  })
+└────────────────────────────────────────────────────────
+┌─ MongoDB command sent to database ─────────────────────
+│  db.accounts.insertOne({
+│    _id: 'acc_002',
+│    owner: 'Marie Dupont',
+│    balance: 850.50,
+│    iban: 'BE71 3100 8237 5916',
+│    preferences: { language: 'fr', paperlessStatements: true }
+│  })
+└────────────────────────────────────────────────────────
+┌─ MongoDB command sent to database ─────────────────────
+│  db.accounts.insertOne({
+│    _id: 'acc_003',
+│    owner: 'Luca Rossi',
+│    balance: 3200.00,
+│    iban: 'BE45 0670 3999 8765'
+│  })
+└────────────────────────────────────────────────────────
+  → 3 documents inserted.
+
+┌─ MongoDB command sent to database ─────────────────────
+│  db.accounts.find({})
+└────────────────────────────────────────────────────────
+  { "_id": "acc_001", "owner": "Jan Janssen", "balance": 1200.0, "iban": "BE68 5390 0754 7034", "customerProfile": { "tier": "gold", "since": 2018 } }
+  { "_id": "acc_002", "owner": "Marie Dupont", "balance": 850.5, "iban": "BE71 3100 8237 5916", "preferences": { "language": "fr", "paperlessStatements": true } }
+  { "_id": "acc_003", "owner": "Luca Rossi", "balance": 3200.0, "iban": "BE45 0670 3999 8765" }
+
+┌─ MongoDB command sent to database ─────────────────────
+│  db.accounts.find({ balance: { $gt: 1000 } })
+└────────────────────────────────────────────────────────
+  { "_id": "acc_001", "owner": "Jan Janssen", "balance": 1200.0, "iban": "BE68 5390 0754 7034", "customerProfile": { "tier": "gold", "since": 2018 } }
+  { "_id": "acc_003", "owner": "Luca Rossi", "balance": 3200.0, "iban": "BE45 0670 3999 8765" }
+
+┌─ MongoDB command sent to database ─────────────────────
+│  db.accounts.updateOne(
+│    { _id: 'acc_001' },
+│    { $inc: { balance: -200.00 } }
+│  )
+└────────────────────────────────────────────────────────
+  → Document updated. New state:
+  { "_id": "acc_001", "owner": "Jan Janssen", "balance": 1000.0, "iban": "BE68 5390 0754 7034", "customerProfile": { "tier": "gold", "since": 2018 } }
+  { "_id": "acc_002", "owner": "Marie Dupont", "balance": 850.5, "iban": "BE71 3100 8237 5916", "preferences": { "language": "fr", "paperlessStatements": true } }
+  { "_id": "acc_003", "owner": "Luca Rossi", "balance": 3200.0, "iban": "BE45 0670 3999 8765" }
+
+┌─ MongoDB command sent to database ─────────────────────
+│  db.transactions.insertOne({
+│    _id: 'tx_001',
+│    from: 'acc_001',
+│    to:   'acc_002',
+│    amount: 200.00,
+│    date:   '2026-06-30',
+│    metadata: { channel: 'mobile-app', deviceOS: 'iOS' }
+│  })
+└────────────────────────────────────────────────────────
+  → Transaction document stored.
+
+┌─ MongoDB command sent to database ─────────────────────
+│  db.transactions.find({ from: 'acc_001' })
+└────────────────────────────────────────────────────────
+  { "_id": "tx_001", "from": "acc_001", "to": "acc_002", "amount": 200.0, "date": "2026-06-30", "metadata": { "deviceOS": "iOS", "channel": "mobile-app" } }
+
+✓ NoSQL demo complete.
+
+─── Key differences vs SQL ───────────────────────────────
+  SQL   → fixed columns, strict schema, powerful JOINs
+  NoSQL → flexible documents, schema-less, fast single reads
+  Both are used in modern banking for different purposes.
+
+
+--- end of log ---

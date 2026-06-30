@@ -1,0 +1,64 @@
+Generated : 2026-06-30 11:45:38
+Log file  : src/database/sql_demo_output.txt
+
+╔══════════════════════════════════════════════════════════╗
+║      SQL — Banking with a Relational Database (JDBC)     ║
+╚══════════════════════════════════════════════════════════╝
+
+┌─ SQL sent to database ─────────────────────────────────
+│  INSERT INTO accounts (id, owner, balance, iban) VALUES (1, 'Jan Janssen',  1200.00, 'BE68 5390 0754 7034')
+└────────────────────────────────────────────────────────
+┌─ SQL sent to database ─────────────────────────────────
+│  INSERT INTO accounts (id, owner, balance, iban) VALUES (2, 'Marie Dupont',  850.50, 'BE71 3100 8237 5916')
+└────────────────────────────────────────────────────────
+┌─ SQL sent to database ─────────────────────────────────
+│  INSERT INTO accounts (id, owner, balance, iban) VALUES (3, 'Luca Rossi',   3200.00, 'BE45 0670 3999 8765')
+└────────────────────────────────────────────────────────
+  → 3 rows inserted.
+
+┌─ SQL sent to database ─────────────────────────────────
+│  SELECT * FROM accounts
+└────────────────────────────────────────────────────────
+  id | owner          | balance  | iban
+  ---|----------------|----------|---------------------
+  1  | Jan Janssen    |  1200.00 | BE68 5390 0754 7034
+  2  | Marie Dupont   |   850.50 | BE71 3100 8237 5916
+  3  | Luca Rossi     |  3200.00 | BE45 0670 3999 8765
+
+┌─ SQL sent to database ─────────────────────────────────
+│  SELECT * FROM accounts WHERE balance > 1000.00
+└────────────────────────────────────────────────────────
+  id | owner          | balance  | iban
+  ---|----------------|----------|---------------------
+  1  | Jan Janssen    |  1200.00 | BE68 5390 0754 7034
+  3  | Luca Rossi     |  3200.00 | BE45 0670 3999 8765
+
+┌─ SQL sent to database ─────────────────────────────────
+│  UPDATE accounts SET balance = balance - 200.00 WHERE id = 1
+└────────────────────────────────────────────────────────
+  → 1 row updated. New state:
+  id | owner          | balance  | iban
+  ---|----------------|----------|---------------------
+  1  | Jan Janssen    |  1000.00 | BE68 5390 0754 7034
+  2  | Marie Dupont   |   850.50 | BE71 3100 8237 5916
+  3  | Luca Rossi     |  3200.00 | BE45 0670 3999 8765
+
+┌─ SQL sent to database ─────────────────────────────────
+│  INSERT INTO transactions (id, from_account_id, to_account_id, amount, tx_date)
+│           VALUES (1, 1, 2, 200.00, '2026-06-30')
+└────────────────────────────────────────────────────────
+  → Transaction recorded.
+
+┌─ SQL sent to database ─────────────────────────────────
+│  SELECT t.id, a.owner AS sender, t.amount, t.tx_date
+│    FROM transactions t
+│    JOIN accounts a ON t.from_account_id = a.id
+└────────────────────────────────────────────────────────
+  id | sender         | amount  | tx_date
+  ---|----------------|---------|----------
+  1  | Jan Janssen    |  200.00 | 2026-06-30
+
+✓ SQL demo complete.
+
+
+--- end of log ---
