@@ -1,0 +1,55 @@
+name: CI
+
+# Runs as a check on every pull request against main.
+# This is deliberately "basic validation", not a full test suite:
+# it proves the frontend and backend still build, nothing more.
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-frontend:
+    name: Build & validate frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate JavaScript syntax
+        run: node --check frontend/app.js
+
+      - name: Confirm frontend files are present
+        run: |
+          test -f frontend/index.html
+          test -f frontend/styles.css
+          test -f frontend/app.js
+          echo "Frontend build artifacts are present."
+
+  build-backend:
+    name: Build backend (Java)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Compile all backend sources
+        run: |
+          mkdir -p out
+          javac -d out $(find src -name "*.java")
+
+      - name: Smoke-run the monolith demo
+        run: java -cp out monolith.BankingApp
+
+      - name: Smoke-run the microservices demo
+        run: java -cp out microservices.App

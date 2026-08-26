@@ -1,0 +1,45 @@
+name: Publish Release
+
+# Runs whenever a GitHub Release is published.
+# Rebuilds the frontend and backend, packages them, and attaches
+# the packages to the release as downloadable assets.
+on:
+  release:
+    types: [ published ]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    name: Build and attach release assets
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Package frontend
+        run: |
+          mkdir -p dist
+          zip -r dist/frontend.zip frontend
+
+      - name: Build and package backend
+        run: |
+          mkdir -p out
+          javac -d out $(find src -name "*.java")
+          jar cf dist/backend.jar -C out .
+
+      - name: Attach packages to the release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            dist/frontend.zip dist/backend.jar \
+            --repo "${{ github.repository }}"
