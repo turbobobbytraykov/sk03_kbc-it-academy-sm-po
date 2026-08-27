@@ -15,6 +15,7 @@ import java.util.*;
  *   GET  http://localhost:8080/accounts        → list all accounts
  *   GET  http://localhost:8080/accounts?id=1   → get one account
  *   POST http://localhost:8080/accounts        → create account (JSON body)
+ *   GET  http://localhost:8080/health          → health check
  *
  * Example POST body:
  *   {"id": "3", "owner": "Alice", "balance": 500}
@@ -30,8 +31,13 @@ public class BankingApi {
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.createContext("/accounts", BankingApi::handleAccounts);
+        server.createContext("/health", BankingApi::handleHealth);
         server.start();
         System.out.println("API running on http://localhost:8080/accounts");
+    }
+
+    static void handleHealth(HttpExchange ex) throws IOException {
+        respond(ex, 200, "{\"status\": \"ok\"}");
     }
 
     static void handleAccounts(HttpExchange ex) throws IOException {
