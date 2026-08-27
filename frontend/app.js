@@ -134,6 +134,7 @@ function getCurrencyName(code) {
 
 async function fetchExchangeRate() {
   const container = document.getElementById("exchange-rate-content");
+  const refreshButton = document.getElementById("refresh-exchange");
 
   if (!isConfigured(API_KEY) || !isConfigured(EXCHANGE_RATE_URL)) {
     showConfigError("exchange-rate-content", "1 &amp; 2");
@@ -141,6 +142,13 @@ async function fetchExchangeRate() {
   }
 
   setLoading(container, "Fetching live exchange rate…");
+
+  // Disable the button while a request is in flight, so a rapid double-click
+  // can't burn through the free API tier's rate limit.
+  if (refreshButton) {
+    refreshButton.disabled = true;
+    refreshButton.textContent = "Refreshing…";
+  }
 
   try {
     const response = await fetch(EXCHANGE_RATE_URL, {
@@ -156,6 +164,11 @@ async function fetchExchangeRate() {
     renderExchangeRate(data);
   } catch (err) {
     showError("exchange-rate-content", err.message);
+  } finally {
+    if (refreshButton) {
+      refreshButton.disabled = false;
+      refreshButton.textContent = "↻ Refresh Rate";
+    }
   }
 }
 
