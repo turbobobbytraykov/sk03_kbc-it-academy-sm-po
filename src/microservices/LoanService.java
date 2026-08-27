@@ -9,6 +9,10 @@ package microservices;
 public class LoanService {
 
     public void calculatePayment(double amount, int months) {
+        if (months <= 0) {
+            System.out.println("[LoanService] Cannot calculate payment: months must be greater than zero.");
+            return;
+        }
         double payment = amount / months;
         System.out.println("[LoanService] Monthly payment for €" + amount + " = €" + String.format("%.2f", payment));
     }
