@@ -24,3 +24,11 @@ hs_err_pid*
 replay_pid*
 
 .idea
+# Build output
+target/
+out/
+
+# Test tooling
+node_modules/
+playwright-report/
+test-results/
