@@ -11,6 +11,10 @@ public class CardService {
     private double balance = 2500.00;
 
     public void processPayment(double amount) {
+        if (amount <= 0) {
+            System.out.println("[CardService] Payment of €" + amount + " REJECTED (amount must be greater than zero)");
+            return;
+        }
         if (amount > balance) {
             System.out.println("[CardService] Payment of €" + amount + " DECLINED");
             return;
