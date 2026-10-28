@@ -27,8 +27,7 @@ import java.util.*;
  * resetAccounts() were extracted so the integration tests in tests/java/api can
  * start a real server on a free port and begin from known data. Nothing about the
  * behaviour changed. This is the usual shape of the problem: code is rarely
- * untestable because the tests are hard to write, it is untestable because it never
- * offered a way in.
+ * untestable because the tests are hard to write, it is untestable because it never offered a way in.
  */
 public class BankingApi {
 
