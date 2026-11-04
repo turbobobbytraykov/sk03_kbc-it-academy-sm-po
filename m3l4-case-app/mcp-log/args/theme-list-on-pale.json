@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"light","component":"list","selector":".list-on-pale","name":"list-on-pale","output":"sass","tokens":{"background":"var(--ig-primary-50)"}}

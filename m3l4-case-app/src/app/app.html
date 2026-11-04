@@ -1,0 +1,71 @@
+<igx-navbar class="topbar" [isActionButtonVisible]="false">
+  <igx-navbar-title class="brand">
+    <span class="brand-title">{{ t.brandTitle }}</span>
+    <span class="brand-sub">{{ t.brandSub }}</span>
+  </igx-navbar-title>
+
+  <div class="topbar-right">
+    <igx-buttongroup class="switcher" selectionMode="singleRequired" [attr.aria-label]="t.tabsLabel">
+      @for (tab of tabs; track tab.id) {
+        <button igxButton type="button" [selected]="state.tab() === tab.id" (click)="state.tab.set(tab.id)">
+          {{ tab.label }}
+        </button>
+      }
+    </igx-buttongroup>
+
+    <!-- The case overlay on every scene. On the case tab it would only repeat the page, so Reset sits there. -->
+    @if (state.tab() === 'ops') {
+      <button igxButton="contained" type="button" class="case-btn btn-accent" [igxLabel]="t.theCaseOverlay"
+              (click)="state.caseOpen.set(true)">
+        <igx-icon family="app" name="overlay" aria-hidden="true" />
+        {{ t.theCase }}
+      </button>
+    } @else {
+      <button igxButton="flat" type="button" class="case-btn btn-on-dark" (click)="state.resetOpen.set(true)">
+        {{ t.resetEllipsis }}
+      </button>
+    }
+
+    <!-- The other language. The state is shared, so switching keeps the tab, the scene, the votes and the reveals. -->
+    <a igxButton="flat" class="lang-btn btn-on-dark" [href]="langHref" [attr.aria-label]="t.langSwitchLabel"
+       [attr.hreflang]="t.langSwitch === 'EN' ? 'en' : 'bg'" [title]="t.langSwitchLabel">{{ t.langSwitch }}</a>
+  </div>
+</igx-navbar>
+
+<!-- Focusable so the case page can be scrolled from the keyboard on small screens. -->
+<main [class]="'page page--' + state.tab()" [attr.tabindex]="state.tab() === 'case' ? 0 : null">
+  @if (state.tab() === 'case') {
+    <app-case-view />
+  } @else {
+    <app-ops-view />
+  }
+</main>
+
+<!-- The case overlay: opens from any scene and leaves the scene where it was. -->
+<igx-dialog class="case-dialog" [isOpen]="state.caseOpen()" (isOpenChange)="state.caseOpen.set($event)"
+            [closeOnEscape]="true" [closeOnOutsideSelect]="true">
+  <igx-dialog-title>
+    <div class="case-dialog-title">
+      <span>{{ t.theCase }}</span>
+      <span class="case-dialog-scene">{{ t.sceneOf(state.current().n, state.scenes.length) }} · {{ state.current().kicker }}</span>
+    </div>
+  </igx-dialog-title>
+  <div class="case-dialog-body" tabindex="0" role="region" [attr.aria-label]="t.theCase">
+    @if (state.caseOpen()) {
+      <app-case-view [compact]="true" />
+    }
+  </div>
+  <igx-dialog-actions>
+    <button igxButton="flat" type="button" class="btn-quiet" (click)="state.resetOpen.set(true)">{{ t.resetEllipsis }}</button>
+    <button igxButton="contained" type="button" class="case-btn btn-accent" (click)="state.caseOpen.set(false)">{{ t.close }}</button>
+  </igx-dialog-actions>
+</igx-dialog>
+
+<igx-dialog [isOpen]="state.resetOpen()" (isOpenChange)="state.resetOpen.set($event)" [closeOnEscape]="true">
+  <igx-dialog-title>{{ t.resetTitle }}</igx-dialog-title>
+  <p class="reset-text">{{ t.resetText }}</p>
+  <igx-dialog-actions>
+    <button igxButton="flat" type="button" (click)="state.resetOpen.set(false)">{{ t.cancel }}</button>
+    <button igxButton="contained" type="button" class="btn-danger" (click)="confirmReset()">{{ t.resetConfirm }}</button>
+  </igx-dialog-actions>
+</igx-dialog>

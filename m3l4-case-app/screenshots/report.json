@@ -1,0 +1,293 @@
+{
+  "external": [
+    "fonts.gstatic.com"
+  ],
+  "report": [
+    {
+      "screen": "case",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "overlay",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-1",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-2",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-3",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-4",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-6",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-7",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-3-finding",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r1",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r2",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r3",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r4",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-4-votes",
+      "size": "1920x950",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "case",
+      "size": "1536x864",
+      "overflow": [
+        "page page--case 849/801"
+      ],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "overlay",
+      "size": "1536x864",
+      "overflow": [
+        "case-dialog-body 807/717"
+      ],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-1",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-2",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-3",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-4",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-6",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-7",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-3-finding",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r1",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r2",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r3",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-5-r4",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [
+        "critical aria-required-children (1: igx-grid-lite,igc-virtual-scroll)",
+        "critical aria-required-parent (1: igx-grid-lite,igc-virtual-scroll)"
+      ],
+      "watermark": false,
+      "errors": []
+    },
+    {
+      "screen": "ops-4-votes",
+      "size": "1536x864",
+      "overflow": [],
+      "axe": [],
+      "watermark": false,
+      "errors": []
+    }
+  ]
+}

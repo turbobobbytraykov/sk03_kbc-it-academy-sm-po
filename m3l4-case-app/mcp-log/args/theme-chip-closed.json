@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"chip","selector":".chip-closed","name":"chip-closed","output":"sass","tokens":{"background":"var(--ig-surface-50)"}}

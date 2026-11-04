@@ -1,0 +1,159 @@
+:host {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.85fr) minmax(0, 1.1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'premise play-out decision'
+    'read read decision';
+  gap: 1em;
+  height: 100%;
+}
+
+// Bulgarian wraps the premise timeline more: its column takes width from the decision column, which has
+// room to spare, so the overlay fits under the dialog's buttons without scrolling.
+:host-context(html[lang='bg']) .case-grid {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.85fr) minmax(0, 1.05fr);
+}
+
+.premise { grid-area: premise; }
+.play-out { grid-area: play-out; }
+.decision { grid-area: decision; }
+.how-to-read { grid-area: read; }
+
+.panel {
+  min-height: 0;
+  margin: 0;
+
+  igx-card-content {
+    padding: 0.9em 1.2em;
+  }
+}
+
+.panel-head {
+  margin: 0 0 0.6em;
+  font-family: var(--app-heading-font);
+  font-size: 1.25em;
+  font-weight: 700;
+  color: var(--app-navy);
+}
+
+.lead {
+  margin: 0 0 0.5em;
+  font-size: 1.08em;
+  line-height: 1.35;
+  color: var(--app-navy);
+}
+
+.panel-lead {
+  margin: 0 0 0.5em;
+  color: var(--app-grey);
+}
+
+// Lists sit on the pale card. Small size: the rows carry two lines of text, not touch targets.
+igx-list {
+  --ig-size: 1;
+  margin: 0.3em 0;
+  border: 0;
+  overflow: visible;
+
+  ::ng-deep .igx-list__item-content {
+    padding-block: 0.3em;
+    gap: 0.8em;
+  }
+}
+
+// MID on PALE is 4.0:1, under AA for text this size; NAVY is 11:1.
+.tl-day {
+  min-width: 6.6em;
+  font-family: var(--app-heading-font);
+  font-weight: 700;
+  color: var(--app-navy);
+}
+
+.tl-text,
+.scene-kicker {
+  white-space: normal;
+  font-size: 1em;
+  color: var(--app-navy);
+}
+
+.scene-kicker {
+  font-weight: 700;
+}
+
+.scene-screen {
+  white-space: normal;
+  font-size: 1em;
+  color: var(--app-grey);
+}
+
+.scene-n {
+  display: inline-grid;
+  place-items: center;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background: var(--app-navy);
+  color: var(--app-white);
+  font-family: var(--app-heading-font);
+  font-weight: 700;
+}
+
+.caption {
+  margin: 0.4em 0 0.25em;
+  font-size: 1em;
+  color: var(--app-navy);
+}
+
+.source {
+  margin: 0;
+  font-size: max(18px, 0.875em);
+  color: var(--app-grey);
+}
+
+.read-text {
+  margin: 0 0 0.4em;
+  line-height: 1.4;
+  color: var(--app-navy);
+
+  &:last-child {
+    margin-bottom: 0;
+    color: var(--app-grey);
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+// In the overlay the grid sizes to its content, a touch smaller so it fits under the dialog's title
+// and buttons at 1920x1080 (19.4px body text there).
+:host(.compact) {
+  font-size: 0.92em;
+
+  .case-grid {
+    height: auto;
+  }
+}
+
+// Below 1920x1080 the page scrolls as a whole rather than each panel on its own.
+@media (max-height: 1000px), (max-width: 1600px) {
+  .case-grid {
+    height: auto;
+  }
+
+  .panel igx-card-content {
+    overflow: visible;
+  }
+}

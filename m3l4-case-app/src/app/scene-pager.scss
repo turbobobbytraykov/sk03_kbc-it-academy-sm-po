@@ -1,0 +1,270 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.pager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 29rem;
+  gap: 1rem;
+  height: 100%;
+}
+
+.list-panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  min-height: 0;
+}
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+
+  h2 {
+    margin: 0;
+    font-family: var(--app-heading-font);
+    font-size: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: normal;
+    color: var(--ops-text);
+  }
+}
+
+.count {
+  color: var(--ops-muted);
+}
+
+.tag {
+  margin-left: auto;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--ops-muted);
+  border-radius: 4px;
+  font-size: var(--app-small);
+  color: var(--ops-muted);
+  white-space: nowrap;
+}
+
+.incidents {
+  // Grid Lite hard-codes 0.75rem headers and 0.8125rem cells inside shadow roots that cannot be styled
+  // from here (the header is not an exported part). Zoom lifts both over the 18px floor.
+  zoom: 1.15;
+  --ig-size: 2;
+  min-height: 0;
+  height: 100%;
+  font-size: 1rem;
+}
+
+.cell-title--printer {
+  font-weight: 700;
+  color: var(--ops-accent);
+}
+
+.reading {
+  margin: 0;
+  padding: 0.7rem 1rem;
+  border-left: 5px solid var(--ops-muted);
+  border-radius: 4px;
+  background: var(--ops-panel);
+
+  p {
+    margin: 0.2rem 0;
+    line-height: 1.35;
+  }
+}
+
+.reading--finding {
+  border-left-color: var(--ops-alert);
+}
+
+.reading-head {
+  font-family: var(--app-heading-font);
+  font-weight: 700;
+  color: var(--ops-text);
+}
+
+.source {
+  font-size: var(--app-small);
+  color: var(--ops-muted);
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  min-height: 0;
+  overflow: auto;
+}
+
+.reading-toggle button {
+  font-size: 1rem;
+  min-height: 2.8rem;
+  text-transform: none;
+}
+
+.ops-panel {
+  flex-shrink: 0;
+  margin: 0;
+
+  igx-card-content {
+    padding: 0.8rem 1rem;
+  }
+}
+
+.alert-card {
+  border-left: 6px solid var(--ops-muted);
+}
+
+.alert-card--finding {
+  border-left-color: var(--ops-alert);
+}
+
+.alert-same {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-size: var(--app-small);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ops-muted);
+}
+
+.alert-title {
+  margin: 0.15rem 0 0.5rem;
+  font-family: var(--app-mono-font);
+  font-size: 1.05rem;
+  color: var(--ops-text);
+}
+
+.alert-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.8rem;
+  align-items: center;
+  margin: 0 0 0.6rem;
+
+  dt {
+    color: var(--ops-muted);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.routed {
+  font-weight: 700;
+  color: var(--ops-text);
+}
+
+.page-sent,
+.queued {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.5rem 0.7rem;
+  border-radius: 4px;
+  background: var(--ops-raised);
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  span {
+    color: var(--ops-muted);
+  }
+}
+
+.page-sent igx-icon {
+  color: var(--ops-alert);
+}
+
+.queued igx-icon {
+  color: var(--ops-muted);
+}
+
+.oncall-head {
+  margin: 0;
+  font-family: var(--app-heading-font);
+  font-size: 1.1rem;
+  line-height: 1.2;
+  letter-spacing: normal;
+  color: var(--ops-text);
+}
+
+.oncall-sub {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  margin: 0.2rem 0 0.5rem;
+  color: var(--ops-muted);
+}
+
+.oncall-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 0.7rem;
+    align-items: center;
+    padding: 0.35rem 0.5rem;
+    border: 2px solid transparent;
+    border-radius: 6px;
+  }
+
+  .routed-here {
+    border-color: var(--ops-accent);
+    background: var(--ops-raised);
+  }
+}
+
+.oncall-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.oncall-role {
+  font-weight: 700;
+  color: var(--ops-text);
+}
+
+.oncall-cover {
+  font-size: var(--app-small);
+  color: var(--ops-muted);
+}
+
+// A 1280x720 window: the scene scrolls as a page, and the incident list is tall enough for every
+// row, so the printer row is never hidden behind the grid's own scrolling.
+@media (max-height: 860px), (max-width: 1500px) {
+  .pager {
+    grid-template-columns: minmax(0, 1fr) 25rem;
+    height: auto;
+  }
+
+  .list-panel {
+    grid-template-rows: auto auto auto;
+  }
+
+  .incidents {
+    height: 25rem;
+  }
+
+  .side {
+    overflow: visible;
+  }
+}
+
+// Bulgarian makes the alert and on-call cards a little taller: tighter gaps keep the side column from scrolling.
+:host-context(html[lang='bg']) .side {
+  gap: 0.45rem;
+}

@@ -1,0 +1,99 @@
+<div class="reveals">
+  <div class="controls">
+    <span class="time-range">
+      <igx-icon family="app" name="time_range" aria-hidden="true" />
+      {{ t.revealWindow }}
+    </span>
+    <span class="hours-note"><span class="tag">{{ t.illustrative }}</span> {{ t.hoursIllustrative }}</span>
+    <span class="progress">{{ t.revealProgress(state.revealed(), total) }}</span>
+    <button igxButton="flat" type="button" class="btn-quiet-dark" [disabled]="state.revealed() === 0" (click)="state.hideLast()">
+      {{ t.hideLast }}
+    </button>
+    <button igxButton="contained" type="button" [disabled]="!nextId()" (click)="state.reveal()">
+      {{ t.revealNext }}{{ nextId() ? ': ' + nextId() : '' }} {{ t.revealKey }}
+    </button>
+  </div>
+
+  @if (shown().has('B')) {
+    <igx-banner class="proposal-banner" [expanded]="true" (closing)="$event.cancel = true">
+      <igx-icon family="app" name="status_alert" aria-hidden="true" />
+      <div class="banner-body">
+        <div class="banner-line">
+          <strong>{{ name('B') }}</strong>
+          <app-status-chip status="alert" [detail]="printerAlert.id" />
+          <span class="banner-alert">{{ printerAlert.title }}</span>
+          <span class="tag">{{ t.illustrative }}</span>
+        </div>
+        <span class="banner-caption">{{ caption('B').caption }}</span>
+      </div>
+      <igx-banner-actions><span></span></igx-banner-actions>
+    </igx-banner>
+  }
+
+  @if (shown().size === 0) {
+    <p class="empty">{{ t.revealEmpty }}</p>
+  }
+  <!-- Always present, and tiles only after its first render: a tile added before the manager has
+       drawn its slot makes igniteui-webcomponents throw ("reading 'assign'"). -->
+  <igc-tile-manager #tileManager class="tiles" column-count="3" gap="16px" resize-mode="none"
+                    [style.display]="shown().size ? null : 'none'">
+    @if (ready()) {
+      @if (shown().has('A')) {
+        <igc-tile class="tile" disable-maximize disable-fullscreen>
+          <span slot="title" class="tile-title">
+            {{ name('A') }}
+            <app-status-chip status="ok" [detail]="t.everyRowSigned" />
+          </span>
+          <div class="tile-body">
+            <igx-grid-lite class="ops-grid approvals" [data]="approvals" [attr.aria-label]="t.approvalsLabel">
+              <igx-grid-lite-column field="ref" [header]="t.colRef" width="6.8rem" />
+              <igx-grid-lite-column field="amount" [header]="t.colAmount" width="4.6rem" />
+              <igx-grid-lite-column field="checker" [header]="t.colChecker" />
+              <igx-grid-lite-column field="status" [header]="t.colStatus" width="5.6rem" />
+            </igx-grid-lite>
+            <p class="caption">{{ caption('A').caption }}</p>
+            <p class="tag-line"><span class="tag">{{ t.illustrative }}</span></p>
+          </div>
+        </igc-tile>
+      }
+
+      @if (shown().has('D')) {
+        <igc-tile class="tile" disable-maximize disable-fullscreen>
+          <span slot="title" class="tile-title">
+            {{ name('D') }}
+            <app-status-chip status="alert" [detail]="t.outsideBand" />
+          </span>
+          <div class="tile-body">
+            <div class="chart-box">
+              <app-ops-chart [options]="dOptions" [label]="t.chart.d" />
+            </div>
+            <p class="caption">{{ caption('D').caption }}</p>
+            <p class="note">{{ caption('D').note }}</p>
+            <p class="tag-line"><span class="tag">{{ t.illustrative }}</span></p>
+          </div>
+        </igc-tile>
+      }
+
+      @if (shown().has('C')) {
+        <igc-tile class="tile tile--c" disable-maximize disable-fullscreen>
+          <span slot="title" class="tile-title">
+            {{ name('C') }}
+            <app-status-chip status="alert" [detail]="t.gap(realCount.value)" />
+          </span>
+          <div class="tile-body">
+            <div class="chart-box">
+              <app-ops-chart [options]="cOptions" [label]="t.chart.c" />
+            </div>
+            <p class="rule">{{ t.cRule }}</p>
+            <p class="caption">{{ caption('C').caption }}</p>
+            <p class="note note--assume">{{ caption('C').note }}</p>
+            <p class="tag-line">
+              <span class="tag">{{ t.illustrative }}</span>
+              {{ t.realCount(realCount.value) }} {{ t.source }} {{ realCount.source }}
+            </p>
+          </div>
+        </igc-tile>
+      }
+    }
+  </igc-tile-manager>
+</div>

@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"card","selector":".ops-panel","name":"ops-panel","output":"sass","tokens":{"background":"var(--ig-surface-500)"}}

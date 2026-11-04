@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"banner","selector":".honesty-banner","name":"honesty-banner","output":"sass","tokens":{"banner-background":"var(--ig-surface-200)"}}

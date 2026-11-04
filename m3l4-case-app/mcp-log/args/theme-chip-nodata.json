@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"chip","selector":".chip-nodata","name":"chip-nodata","output":"sass","tokens":{"background":"var(--ig-gray-700)"}}

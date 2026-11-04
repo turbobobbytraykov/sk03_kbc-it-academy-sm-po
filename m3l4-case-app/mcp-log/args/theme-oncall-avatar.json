@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"avatar","selector":".oncall-avatar","name":"oncall-avatar","output":"sass","tokens":{"background":"var(--ig-surface-100)"}}

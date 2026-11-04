@@ -1,0 +1,99 @@
+<div class="pager">
+  <section class="list-panel">
+    <header class="panel-head">
+      <h2>{{ t.incidents }}</h2>
+      <span class="count">{{ t.openCount(rows().length) }}</span>
+      <span class="tag">{{ t.illustrative }}</span>
+    </header>
+
+    <igx-grid-lite class="ops-grid incidents" [data]="rows()" [attr.aria-label]="t.incidentsLabel">
+      <igx-grid-lite-column field="urgency" [header]="t.colUrgency" width="8rem">
+        <ng-template igxGridLiteCell let-value>
+          <app-status-chip [status]="value === 'high' ? 'alert' : 'nodata'"
+                           [label]="value === 'high' ? t.urgencyHigh : t.urgencyLow" />
+        </ng-template>
+      </igx-grid-lite-column>
+      <igx-grid-lite-column field="id" [header]="t.colId" width="7.2rem" />
+      <igx-grid-lite-column field="title" [header]="t.colTitle">
+        <ng-template igxGridLiteCell let-value let-row="row">
+          <span [class]="row.data.printer ? 'cell-title cell-title--printer' : 'cell-title'">{{ value }}</span>
+        </ng-template>
+      </igx-grid-lite-column>
+      <igx-grid-lite-column field="routedTo" [header]="t.colRouted" width="12.5rem" />
+      <igx-grid-lite-column field="opened" [header]="t.colOpened" width="10.5rem" />
+      <igx-grid-lite-column field="status" [header]="t.colStatus" width="6.5rem" />
+    </igx-grid-lite>
+
+    <figure class="reading" [class.reading--finding]="asFinding()">
+      <figcaption class="reading-head">{{ reading().head }}</figcaption>
+      @for (line of reading().lines; track $index) {
+        <p>{{ line }}</p>
+      }
+      @if (!asFinding()) {
+        <p class="source">{{ t.source }} {{ printerSource }}</p>
+      }
+    </figure>
+  </section>
+
+  <aside class="side">
+    <igx-buttongroup class="reading-toggle" selectionMode="singleRequired" [attr.aria-label]="t.readingLabel">
+      @for (r of readings; track r.id) {
+        <button igxButton type="button" [selected]="state.faultReading() === r.id" (click)="state.faultReading.set(r.id)">
+          {{ r.label }}
+        </button>
+      }
+    </igx-buttongroup>
+
+    <igx-card class="ops-panel alert-card" [class.alert-card--finding]="asFinding()">
+      <igx-card-content>
+        <p class="alert-same">{{ t.sameAlert }} <span class="tag">{{ t.illustrative }}</span></p>
+        <p class="alert-title">{{ printer().title }}</p>
+        <dl class="alert-facts">
+          <dt>{{ t.colUrgency }}</dt>
+          <dd>
+            <app-status-chip [status]="asFinding() ? 'alert' : 'nodata'"
+                             [label]="asFinding() ? t.urgencyHigh : t.urgencyLow" />
+          </dd>
+          <dt>{{ t.colRouted }}</dt>
+          <dd class="routed">{{ printer().routedTo }}</dd>
+        </dl>
+        @if (asFinding()) {
+          <div class="page-sent" role="status">
+            <igx-icon family="app" name="tool_pager" aria-hidden="true" />
+            <div>
+              <strong>{{ t.pageSent }}: {{ printer().routedTo }}</strong>
+              <span>{{ t.pageText }}</span>
+            </div>
+          </div>
+        } @else {
+          <div class="queued" role="status">
+            <igx-icon family="app" name="time_range" aria-hidden="true" />
+            <div>
+              <strong>{{ t.queued }}: {{ printer().routedTo }}</strong>
+              <span>{{ t.queuedText }}</span>
+            </div>
+          </div>
+        }
+      </igx-card-content>
+    </igx-card>
+
+    <igx-card class="ops-panel oncall">
+      <igx-card-content>
+        <h2 class="oncall-head">{{ t.onCall }}</h2>
+        <p class="oncall-sub">{{ t.onCallSub }} <span class="tag">{{ t.illustrative }}</span></p>
+        <ul class="oncall-list">
+          @for (o of onCall; track o.role) {
+            <li [class.routed-here]="o.role === routedRole()">
+              <igx-avatar class="oncall-avatar" [initials]="o.initials" shape="circle" [attr.aria-hidden]="true" />
+              <div class="oncall-text">
+                <span class="oncall-role">{{ o.role }}</span>
+                <span class="oncall-cover">{{ o.cover }}</span>
+              </div>
+              <app-status-chip [status]="o.pageable ? 'ok' : 'nodata'" [label]="o.pageable ? t.pageable : t.notPageable" />
+            </li>
+          }
+        </ul>
+      </igx-card-content>
+    </igx-card>
+  </aside>
+</div>

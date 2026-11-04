@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"grid-lite","selector":".ops-grid","name":"ops-grid","output":"sass","tokens":{"background":"var(--ig-surface-500)","foreground":"var(--ig-gray-900)","accent-color":"var(--ig-primary-500)"}}

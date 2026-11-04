@@ -1,0 +1,20 @@
+{
+  "platform": "angular",
+  "variant": "dark",
+  "designSystem": "material",
+  "name": "ops-dark",
+  "output": "sass",
+  "primary": { "mode": "shades", "baseColor": "#26B1E6" },
+  "secondary": { "mode": "shades", "baseColor": "#1B7FB8" },
+  "surface": { "mode": "explicit", "shades": {
+    "50": "#1F5677", "100": "#0F4A6B", "200": "#003E61", "300": "#003452", "400": "#002A42",
+    "500": "#002033", "600": "#001C2E", "700": "#001A29", "800": "#001826", "900": "#001724",
+    "A100": "#0F4A6B", "A200": "#003E61", "A400": "#002A42", "A700": "#001A29" } },
+  "gray": { "mode": "explicit", "shades": {
+    "50": "#0E2231", "100": "#18303F", "200": "#26404F", "300": "#3A5466", "400": "#516674",
+    "500": "#687D8B", "600": "#7D91A1", "700": "#9DAFBD", "800": "#C7D4DE", "900": "#EEF4F8" } },
+  "info": { "mode": "shades", "baseColor": "#47A8E1" },
+  "success": { "mode": "shades", "baseColor": "#4EB862" },
+  "warn": { "mode": "shades", "baseColor": "#E8A317" },
+  "error": { "mode": "shades", "baseColor": "#F0656B" }
+}

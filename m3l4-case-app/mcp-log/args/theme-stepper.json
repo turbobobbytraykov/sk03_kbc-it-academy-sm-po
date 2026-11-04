@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"stepper","selector":".scene-stepper","name":"scene-stepper","output":"sass","tokens":{"step-background":"var(--ig-surface-700)","current-indicator-background":"var(--ig-primary-500)","complete-indicator-background":"var(--ig-surface-200)"}}

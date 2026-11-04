@@ -1,0 +1,154 @@
+:host {
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  height: 100%;
+  background: var(--ops-bg);
+  color: var(--ops-text);
+}
+
+// The stepper only navigates; its content area stays empty.
+.scene-stepper {
+  padding: 0.25rem 1rem 0;
+  background: var(--ig-surface-700);
+
+  ::ng-deep .igx-stepper__body {
+    display: none;
+  }
+
+  ::ng-deep .igx-stepper__step-header {
+    padding-block: 0.5rem;
+  }
+}
+
+.scene-stepper ::ng-deep .igx-step__indicator {
+  width: 2rem;
+  height: 2rem;
+  font-size: var(--app-small);
+  font-weight: 700;
+}
+
+.step-title {
+  display: block;
+  white-space: normal;
+  line-height: 1.2;
+  font-size: 1rem;
+}
+
+// Short screens (a Teams window, 1280x720): only the current scene keeps its title, on one line.
+@media (max-height: 860px) {
+  .scene-stepper {
+    ::ng-deep igx-step:not(:has(.igx-step-header--current)) .igx-step__title-wrapper {
+      display: none;
+    }
+
+    ::ng-deep igx-step:has(.igx-step-header--current) {
+      flex: 0 0 auto;
+    }
+  }
+
+  .step-title {
+    white-space: nowrap;
+  }
+}
+
+.honesty-banner {
+  ::ng-deep .igx-banner {
+    min-height: 0;
+    padding-block: 0.35rem;
+  }
+
+  ::ng-deep .igx-banner__actions {
+    display: none;
+  }
+
+  igx-icon {
+    color: var(--ops-accent);
+  }
+}
+
+.honesty-text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ops-text);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.6rem 1.5rem;
+  background: var(--ops-panel);
+  border-bottom: 2px solid var(--ops-line);
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.tool-icon {
+  --size: 2rem;
+  color: var(--ops-accent);
+}
+
+.tool-names {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.tool-name {
+  font-size: var(--app-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ops-accent);
+}
+
+// ig-typography gives every h1 a display line-height; this one is a toolbar label.
+.screen-name {
+  margin: 0;
+  font-family: var(--app-heading-font);
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: normal;
+  font-weight: 700;
+  color: var(--ops-text);
+}
+
+.kicker {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  text-align: right;
+  line-height: 1.2;
+}
+
+.kicker-n {
+  font-size: var(--app-small);
+  color: var(--ops-muted);
+}
+
+.kicker-text {
+  font-style: italic;
+  color: var(--ops-text);
+}
+
+// Narrow windows: the stepper already names the scene, and the clocks need the width.
+@media (max-width: 1500px) {
+  .kicker {
+    display: none;
+  }
+
+  app-world-clock {
+    margin-left: auto;
+  }
+}
+
+.scene {
+  min-height: 0;
+  overflow: auto;
+  padding: 1rem 1.5rem;
+}

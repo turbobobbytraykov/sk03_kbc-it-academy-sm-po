@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"dark","component":"button-group","selector":".reading-toggle","name":"reading-toggle","output":"sass","tokens":{"item-background":"var(--ig-surface-300)","item-selected-background":"var(--ig-primary-500)"}}

@@ -1,0 +1,1 @@
+{"platform":"angular","designSystem":"material","variant":"light","component":"card","selector":".proposal-card","name":"proposal-card","output":"sass","tokens":{"background":"var(--app-navy-600)"}}
