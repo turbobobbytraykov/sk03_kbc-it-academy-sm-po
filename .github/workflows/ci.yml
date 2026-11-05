@@ -115,7 +115,8 @@ jobs:
 
   e2e-tests:
     name: End-to-end tests (browser)
-    runs-on: ubuntu-latest
+    # Pinned: `playwright install --with-deps` fails on the ubuntu-latest 26.04 image.
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4

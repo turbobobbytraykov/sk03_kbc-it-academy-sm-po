@@ -234,27 +234,36 @@ anyway. Right now, that gate is only a report.
 
 ### 2c. Turn the report into a block
 
-Go to **Settings → Branches**. GitHub gives you two ways to do this: a **ruleset** or
-a **classic branch protection rule**. Either one works, and the classic one has fewer
-screens, so take that if you are offered the choice. Create a rule for the branch `main`
-and tick:
+Go to **Settings → Branches** and click **Add branch ruleset**. (The same screen is
+under **Settings → Rules → Rulesets → New ruleset → New branch ruleset**.) Fill it in
+from top to bottom:
 
-- **Require status checks to pass before merging**
-- then search for `Backend tests & coverage` and add it
+1. **Ruleset name**: `protect-main`.
+2. **Enforcement status**: change it from *Disabled* to **Active**. A new ruleset starts
+   disabled, and a disabled ruleset blocks nothing.
+3. **Bypass list**: click **Add bypass**, tick **Repository admin**, and add it. Many
+   real teams set it up this way, and it is what step 2d is about.
+4. **Target branches**: click **Add target → Include default branch**. That is `main`.
+5. **Branch rules**: *Restrict deletions* and *Block force pushes* are already ticked.
+   Leave them. Tick **Require status checks to pass**. Under it, click **Add checks**,
+   type `Backend tests & coverage`, and select it. Leave every other box unticked.
 
-Save, then go back to your pull request. The merge button has changed. It now says
-*Required statuses must pass before merging*.
+Click **Create**, then go back to your pull request. The merge box has changed. It now
+says that merging is blocked, because a required status check has failed.
 
 ### 2d. Now try to walk past it
 
-Look a bit closer. Under the blocked merge button there is a note saying that you, as
-an administrator of this repository, are allowed to bypass the rule. And there is a
-button that lets you do exactly that.
+Look a bit closer. Under the blocked merge button there is a tick box, *Merge without
+waiting for requirements to be met (bypass rules)*. You see it because you are a
+repository admin, and you put that role on the bypass list. Tick it and the merge
+button turns green again. Do not click it.
 
 **That is the finding, and it is the whole point of the task.** A gate is only as strong
 as the answer to two questions: who is allowed past it, and does going past it leave a
-trace? Go back to the rule and tick **Do not allow bypassing the above settings**. Then
-return to the pull request. The button is gone, for you as well.
+trace? Go back to **Settings → Rules → Rulesets → protect-main**. In the **Bypass list**,
+remove **Repository admin** (the **⋯** menu next to it), so the list is empty. Click
+**Save changes**. Then return to the pull request and reload it. The tick box is gone,
+for you as well.
 
 One tick box is the difference between a control and a suggestion. Somebody has already
 made that choice for the pipelines your own product releases through. It is worth
@@ -262,8 +271,9 @@ knowing which way they went.
 
 ### 2e. Put it back
 
-Close the pull request without merging and delete the branch. Then either delete the
-branch protection rule or untick the bypass restriction. If you leave it in place, the
+Close the pull request without merging and delete the branch. Then open the
+`protect-main` ruleset and either delete it (**⋯ → Delete ruleset**, top right) or set
+its **Enforcement status** back to *Disabled* and save. If you leave it in place, the
 next homework will be more exciting than intended.
 
 ### 2f. What you should have
@@ -383,7 +393,8 @@ Question 4 opens the next lesson, so bring your answer with you.
 | No `tests/` folder, no `pom.xml` | The fork has not been synced | **Sync fork → Update branch** on your fork's front page |
 | No **Branches** option under Settings, or the rule will not save | The fork is private | Settings → General → Danger Zone → change visibility to public |
 | `Backend tests & coverage` cannot be found when adding the required check | The check has not run on this repository yet | Open the pull request first, let the jobs run, then add the rule |
-| The merge button is still green with a red check | The rule has not been created, or it exempts administrators | Tick *Require status checks to pass*, then *Do not allow bypassing the above settings* |
+| The merge button is still green with a red check | The ruleset is still *Disabled*, does not target `main`, or has no required check | In the ruleset: **Enforcement status → Active**, **Include default branch**, and *Backend tests & coverage* added under *Require status checks to pass* |
+| No bypass tick box under the blocked merge button in 2d | The bypass list is empty, so nobody may bypass | Expected if you skipped step 3 of 2c. Add **Repository admin** to see it, then remove it again |
 | The Task 1 run takes four minutes | Two full Maven builds, each downloading libraries | Expected. The `cache: 'maven'` line makes the second run of the day faster |
 
 ---
@@ -420,8 +431,11 @@ the answer to a question it was never asked.
 - **Facts to re-check about a week before sending.** Branch protection with required
   status checks is free on **public** repositories (GitHub docs, checked 5 Sep 2026);
   a `workflow_dispatch` workflow must sit on the default branch (same); GitHub's
-  Settings → Branches screen now offers rulesets alongside classic rules and the
+  Settings → Branches screen offers rulesets alongside classic rules and the
   wording moves — walk Task 2 once and correct the labels if they have changed.
+  Task 2 was rewritten for rulesets on 4 Nov 2026: the ruleset screen has no *Do not
+  allow bypassing* box, bypass is controlled by the **Bypass list** instead, and a new
+  ruleset starts with *Enforcement status: Disabled*.
 - **What has and has not been run.** The five end-to-end tests were run on 5 Sep 2026
   and pass; the flaky test was un-skipped and run twice in batches of twenty, failing
   nine times and then thirteen, which is where the bonus's numbers come from. The
