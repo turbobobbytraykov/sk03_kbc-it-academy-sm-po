@@ -1,0 +1,193 @@
+// Head, grid, charts: the grid takes what the other two leave, and scrolls inside itself when the log is long.
+:host {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 1rem;
+  height: 100%;
+}
+
+.log-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+
+  h1 {
+    // Ignite's typography gives h1 its own margins and line height, which cost a tenth of the screen.
+    margin: 0 !important;
+    font-family: var(--app-heading-font);
+    font-size: 2.2rem;
+    line-height: 1.15;
+    color: var(--app-navy);
+  }
+}
+
+.log-intro {
+  margin: 0.3rem 0 0;
+  font-size: 1.2rem;
+  color: var(--app-grey);
+}
+
+.tally {
+  display: flex;
+  gap: 1rem;
+}
+
+// Number and label on one line: the head stays short, so the grid and the charts get the height.
+.tally-card {
+  margin: 0;
+
+  igx-card-content {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.5rem 1.2rem !important;
+  }
+}
+
+.tally-num {
+  font-family: var(--app-heading-font);
+  font-size: 2.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--app-navy);
+}
+
+.tally-label {
+  white-space: nowrap;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--app-grey);
+}
+
+.tally-card--auth .tally-num { color: var(--app-mid); }
+.tally-card--unauth .tally-num { color: var(--ig-error-500); }
+
+.empty {
+  font-size: 1.3rem;
+  color: var(--app-grey);
+}
+
+.log-grid {
+  // Grid Lite hard-codes 0.75rem headers and 0.8125rem cells inside shadow roots that cannot be styled
+  // from here. Zoom lifts both over the 18px floor, as in the M3 L4 app.
+  zoom: 1.2;
+  --ig-size: 2;
+  min-height: 0;
+  height: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+.cell-text {
+  font-weight: 600;
+  color: var(--app-navy);
+}
+
+// Never colour alone: a tick or a bar-through-circle sits beside the word.
+.verdict {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.1rem 0.6rem 0.1rem 0.4rem;
+  border-radius: 1rem;
+  background: var(--app-mid);
+  color: var(--app-white);
+  font-weight: 700;
+  white-space: nowrap;
+
+  igx-icon {
+    --ig-icon-size: 1.1em;
+    width: 1.1em;
+    height: 1.1em;
+  }
+}
+
+.verdict--unauth {
+  background: var(--ig-error-500);
+}
+
+.row-actions {
+  display: inline-flex;
+  gap: 0.2rem;
+  white-space: nowrap;
+
+  // The grid is zoomed by 1.2, so this lands at the size of every other flat button.
+  button {
+    --ig-button-font-size: 0.85rem;
+    font-size: 0.85rem;
+    min-height: 2rem;
+    padding-inline: 0.6rem;
+  }
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 1rem;
+  height: 15.5rem;
+}
+
+.chart-card {
+  margin: 0;
+  min-height: 0;
+
+  igx-card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem 1.1rem 0.4rem !important;
+  }
+}
+
+.chart-title {
+  margin: 0;
+  font-family: var(--app-heading-font);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--app-mid);
+}
+
+// A flex column, so the chart inside gets a height it can measure.
+.chart-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.edit-form {
+  display: grid;
+  gap: 1rem;
+  width: min(62rem, 86vw);
+  padding: 0.4rem 1.5rem 0.2rem;
+  --ig-size: 2;
+}
+
+.edit-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.edit-label {
+  min-width: 7.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--app-grey);
+}
+
+// Names keep their case, as on the action screen.
+.role-picker button {
+  font-size: 1.05rem;
+  text-transform: none;
+  letter-spacing: 0;
+  min-height: 2.6rem;
+  padding-inline: 1rem;
+  flex: 0 0 auto;
+}

@@ -1,0 +1,91 @@
+<igx-navbar class="topbar" [isActionButtonVisible]="false">
+  <igx-navbar-title class="brand">
+    <span class="brand-title">{{ t.brandTitle }}</span>
+    <span class="brand-sub">{{ t.brandSub }}</span>
+  </igx-navbar-title>
+
+  <div class="topbar-right">
+    <igx-buttongroup class="switcher" selectionMode="singleRequired">
+      @for (s of screens; track s.id) {
+        <button igxButton type="button" [selected]="sim.screen() === s.id" (click)="sim.screen.set(s.id)">
+          {{ s.label }}
+          @if (s.id === 'log' && sim.tally().total) { ({{ sim.tally().total }}) }
+        </button>
+      }
+    </igx-buttongroup>
+
+    <!-- The clock stays in view on every other screen, so leaving the action screen never loses it.
+         On the action screen the large clock is right below, so this one only keeps its place. -->
+    <button igxButton="flat" type="button" [class]="'mini-clock btn-on-dark mini-clock--' + sim.clockPhase()"
+            [style.visibility]="sim.screen() === 'action' ? 'hidden' : null"
+            (click)="sim.screen.set('action')" [title]="t.backToAction">
+      <span class="mini-time">{{ sim.remainingLabel() }}</span>
+      <span class="mini-state">
+        {{ sim.finished() ? t.stateTime : sim.running() ? t.stateRunning : t.statePaused }} · {{ sim.storyTime() }}
+      </span>
+    </button>
+
+    <!-- Kept in place but hidden on The case screen, where it would only repeat the screen. -->
+    <button igxButton="contained" type="button" class="case-btn btn-accent" [attr.aria-label]="t.theCaseOverlay"
+            [title]="t.theCaseOverlay"
+            [style.visibility]="sim.screen() === 'case' ? 'hidden' : null" (click)="caseOpen.set(true)">
+      <igx-icon family="app" name="overlay" aria-hidden="true" />
+      {{ t.theCase }}
+    </button>
+
+    <!-- The other language. The session is shared, so switching keeps the clock position and the log. -->
+    <a igxButton="flat" class="lang-btn btn-on-dark" [href]="langHref" [attr.aria-label]="t.langSwitchLabel"
+       [attr.hreflang]="t.langSwitch === 'EN' ? 'en' : 'bg'" [title]="t.langSwitchLabel">{{ t.langSwitch }}</a>
+  </div>
+</igx-navbar>
+
+<main class="screen" [class]="'screen screen--' + sim.screen()">
+  @switch (sim.screen()) {
+    @case ('case') {
+      <app-case-view />
+      <div class="case-footer">
+        <button igxButton="contained" type="button" class="go-btn" (click)="sim.screen.set('action')">
+          {{ t.goToAction }}
+        </button>
+        <span class="shortcuts">{{ t.shortcuts }}</span>
+        <button igxButton="flat" type="button" class="reset-btn btn-quiet" (click)="sim.resetOpen.set(true)">
+          {{ t.resetEllipsis }}
+        </button>
+      </div>
+    }
+    @case ('action') { <app-action-screen /> }
+    @case ('log') { <app-log-screen /> }
+    @case ('reveal') { <app-reveal-screen /> }
+  }
+</main>
+
+<!-- The case overlay: opens from anywhere, the clock keeps running underneath. -->
+<igx-dialog class="case-dialog" [(isOpen)]="caseOpen" [closeOnEscape]="true" [closeOnOutsideSelect]="true">
+  <igx-dialog-title>
+    <div class="case-dialog-title">
+      <span>{{ t.theCase }}</span>
+      <span class="case-dialog-clock">{{ sim.remainingLabel() }} · {{ t.storyTimeInline }} {{ sim.storyTime() }}</span>
+    </div>
+  </igx-dialog-title>
+  <div class="case-dialog-body">
+    <app-case-view />
+  </div>
+  <igx-dialog-actions>
+    <button igxButton="contained" type="button" class="case-btn btn-accent" (click)="caseOpen.set(false)">{{ t.close }}</button>
+  </igx-dialog-actions>
+</igx-dialog>
+
+<igx-dialog [isOpen]="sim.resetOpen()" (isOpenChange)="sim.resetOpen.set($event)" [closeOnEscape]="true">
+  <igx-dialog-title>{{ t.resetTitle }}</igx-dialog-title>
+  <dl class="reset-text">
+    <dt>{{ t.resetClock }}</dt>
+    <dd>{{ t.resetClockText }}</dd>
+    <dt>{{ t.resetAll }}</dt>
+    <dd>{{ t.resetAllText }}</dd>
+  </dl>
+  <igx-dialog-actions>
+    <button igxButton="flat" type="button" (click)="sim.resetOpen.set(false)">{{ t.cancel }}</button>
+    <button igxButton="outlined" type="button" (click)="confirmReset(false)">{{ t.resetClock }}</button>
+    <button igxButton="contained" type="button" class="btn-danger" (click)="confirmReset(true)">{{ t.resetAll }}</button>
+  </igx-dialog-actions>
+</igx-dialog>

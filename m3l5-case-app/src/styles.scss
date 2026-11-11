@@ -1,0 +1,411 @@
+// Ignite UI theme for the Skillo deck palette (CLAUDE.md section 2).
+// Generated with the igniteui-theming MCP server (create_custom_palette, create_typography,
+// create_component_theme) on 1 Nov 2026. Regenerate through the server rather than hand-editing tokens.
+@use 'igniteui-angular/theming' as *;
+
+// Primary is NAVY with explicit shades, because NAVY is too dark for shades() to derive light tints:
+// 50 = PALE, 400 = MID, 500 = NAVY, the rest the same hue at stepped lightness.
+// The gray family is seeded from GREY (gray-700 ≈ #516674). Amber and red are the clock's warning colours.
+$deck-palette: (
+  'primary': (
+    '50': #EAF4FB,
+    '50-contrast': adaptive-contrast(#EAF4FB),
+    '50-raw': #EAF4FB,
+    '100': #C2E2F5,
+    '100-contrast': adaptive-contrast(#C2E2F5),
+    '100-raw': #C2E2F5,
+    '200': #8EC9EB,
+    '200-contrast': adaptive-contrast(#8EC9EB),
+    '200-raw': #8EC9EB,
+    '300': #47A8E1,
+    '300-contrast': adaptive-contrast(#47A8E1),
+    '300-raw': #47A8E1,
+    '400': #1B7FB8,
+    '400-contrast': adaptive-contrast(#1B7FB8),
+    '400-raw': #1B7FB8,
+    '500': #003E61,
+    '500-contrast': adaptive-contrast(#003E61),
+    '500-raw': #003E61,
+    '600': #003452,
+    '600-contrast': adaptive-contrast(#003452),
+    '600-raw': #003452,
+    '700': #002A42,
+    '700-contrast': adaptive-contrast(#002A42),
+    '700-raw': #002A42,
+    '800': #002033,
+    '800-contrast': adaptive-contrast(#002033),
+    '800-raw': #002033,
+    '900': #001724,
+    '900-contrast': adaptive-contrast(#001724),
+    '900-raw': #001724,
+    'A100': #8EC9EB,
+    'A100-contrast': adaptive-contrast(#8EC9EB),
+    'A100-raw': #8EC9EB,
+    'A200': #47A8E1,
+    'A200-contrast': adaptive-contrast(#47A8E1),
+    'A200-raw': #47A8E1,
+    'A400': #1B7FB8,
+    'A400-contrast': adaptive-contrast(#1B7FB8),
+    'A400-raw': #1B7FB8,
+    'A700': #003452,
+    'A700-contrast': adaptive-contrast(#003452),
+    'A700-raw': #003452
+  ),
+  'secondary': shades(
+    'secondary',
+    #26B1E6,
+    ('50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'A200', 'A400', 'A700')
+  ),
+  'gray': shades(
+    'gray',
+    #516674,
+    ('50', '100', '200', '300', '400', '500', '600', '700', '800', '900'),
+    #FFFFFF
+  ),
+  'surface': shades(
+    'surface',
+    #FFFFFF,
+    ('50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'A200', 'A400', 'A700')
+  ),
+  'info': shades(
+    'info',
+    #1B7FB8,
+    ('50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'A200', 'A400', 'A700')
+  ),
+  'success': shades(
+    'success',
+    #4eb862,
+    ('50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'A200', 'A400', 'A700')
+  ),
+  'warn': shades(
+    'warn',
+    #E8A317,
+    ('50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'A200', 'A400', 'A700')
+  ),
+  'error': shades(
+    'error',
+    #C62828,
+    ('50', '100', '200', '300', '400', '500', '600', '700', '800', '900', 'A100', 'A200', 'A400', 'A700')
+  ),
+  '_meta': (
+    'variant': light
+  )
+);
+
+@include typography(
+  $font-family: '"Roboto", "Segoe UI", Arial, sans-serif',
+  $type-scale: $material-type-scale
+);
+@include core();
+@include theme($palette: $deck-palette, $schema: $light-material-schema);
+
+// ---------- component themes ----------
+// Global defaults first, then the app's variants (same specificity, so later wins).
+
+
+$navbar-topbar: navbar-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-primary-500)
+);
+
+// Apply the theme to .topbar
+.topbar {
+  @include tokens($navbar-topbar);
+}
+
+$button-group-switcher: button-group-theme(
+  $schema: $light-material-schema,
+  $item-background: var(--ig-primary-500),
+  $item-selected-background: var(--ig-surface-500),
+  $item-selected-text-color: var(--ig-primary-500)
+);
+
+// Apply the theme to .switcher
+.switcher {
+  @include tokens($button-group-switcher);
+}
+
+$button-group-role-picker: button-group-theme(
+  $schema: $light-material-schema,
+  $item-background: var(--ig-surface-500),
+  $item-text-color: var(--ig-primary-500),
+  $item-border-color: var(--ig-primary-200),
+  $item-hover-background: var(--ig-primary-50),
+  $item-hover-text-color: var(--ig-primary-500),
+  $item-selected-background: var(--ig-primary-500),
+  $item-selected-text-color: var(--ig-primary-500-contrast),
+  $item-selected-border-color: var(--ig-primary-500),
+  $item-selected-hover-background: var(--ig-primary-600),
+  $item-selected-hover-text-color: var(--ig-primary-500-contrast)
+);
+
+// Apply the theme to .role-picker
+.role-picker {
+  @include tokens($button-group-role-picker);
+}
+
+$contained-button-igx-button-contained: contained-button-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-primary-500)
+);
+
+// Apply the theme to .igx-button--contained
+.igx-button--contained {
+  @include tokens($contained-button-igx-button-contained);
+}
+
+$contained-button-btn-accent: contained-button-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-secondary-500),
+  $foreground: var(--ig-primary-500)
+);
+
+// Apply the theme to .btn-accent
+.btn-accent {
+  @include tokens($contained-button-btn-accent);
+}
+
+$contained-button-btn-auth: contained-button-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-info-500)
+);
+
+// Apply the theme to .btn-auth
+.btn-auth {
+  @include tokens($contained-button-btn-auth);
+}
+
+$contained-button-btn-danger: contained-button-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-error-500)
+);
+
+// Apply the theme to .btn-danger
+.btn-danger {
+  @include tokens($contained-button-btn-danger);
+}
+
+$outlined-button-igx-button-outlined: outlined-button-theme(
+  $schema: $light-material-schema,
+  $foreground: var(--ig-primary-500)
+);
+
+// Apply the theme to .igx-button--outlined
+.igx-button--outlined {
+  @include tokens($outlined-button-igx-button-outlined);
+}
+
+$outlined-button-btn-held: outlined-button-theme(
+  $schema: $light-material-schema,
+  $foreground: var(--ig-primary-500),
+  $background: var(--ig-warn-500)
+);
+
+// Apply the theme to .btn-held
+.btn-held {
+  @include tokens($outlined-button-btn-held);
+}
+
+$outlined-button-verdict-toggle-is-unauth: outlined-button-theme(
+  $schema: $light-material-schema,
+  $foreground: var(--ig-error-500)
+);
+
+// Apply the theme to .verdict-toggle.is-unauth
+.verdict-toggle.is-unauth {
+  @include tokens($outlined-button-verdict-toggle-is-unauth);
+}
+
+$flat-button-igx-button-flat: flat-button-theme(
+  $schema: $light-material-schema,
+  $foreground: var(--ig-primary-500)
+);
+
+// Apply the theme to .igx-button--flat
+.igx-button--flat {
+  @include tokens($flat-button-igx-button-flat);
+}
+
+$flat-button-btn-on-dark: flat-button-theme(
+  $schema: $light-material-schema,
+  $foreground: var(--ig-surface-500)
+);
+
+// Apply the theme to .btn-on-dark
+.btn-on-dark {
+  @include tokens($flat-button-btn-on-dark);
+}
+
+$flat-button-btn-quiet: flat-button-theme(
+  $schema: $light-material-schema,
+  $foreground: var(--ig-gray-700)
+);
+
+// Apply the theme to .btn-quiet
+.btn-quiet {
+  @include tokens($flat-button-btn-quiet);
+}
+
+$flat-button-btn-delete: flat-button-theme(
+  $schema: $light-material-schema,
+  $foreground: var(--ig-error-500)
+);
+
+// Apply the theme to .btn-delete
+.btn-delete {
+  @include tokens($flat-button-btn-delete);
+}
+
+$card-card-light: card-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-surface-500)
+);
+
+// Apply the theme to .card-light
+.card-light {
+  @include tokens($card-card-light);
+}
+
+$card-card-pale: card-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-primary-50),
+  $resting-shadow: none
+);
+
+// Apply the theme to .card-pale
+.card-pale {
+  @include tokens($card-card-pale);
+}
+
+$card-card-dark: card-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-primary-500)
+);
+
+// Apply the theme to .card-dark
+.card-dark {
+  @include tokens($card-card-dark);
+}
+
+$chip-chip: chip-theme(
+  $schema: $light-material-schema,
+  $disabled-background: var(--ig-surface-500),
+  $disabled-text-color: var(--ig-primary-500),
+  $disabled-border-color: transparent
+);
+
+// Apply the theme to .chip
+.chip {
+  @include tokens($chip-chip);
+}
+
+$chip-chip-rate: chip-theme(
+  $schema: $light-material-schema,
+  $disabled-background: var(--ig-primary-500),
+  $disabled-text-color: var(--ig-primary-500-contrast),
+  $disabled-border-color: transparent
+);
+
+// Apply the theme to .chip--rate
+.chip--rate {
+  @include tokens($chip-chip-rate);
+}
+
+$chip-chip-set: chip-theme(
+  $schema: $light-material-schema,
+  $disabled-background: var(--ig-secondary-500),
+  $disabled-text-color: var(--ig-primary-500),
+  $disabled-border-color: transparent
+);
+
+// Apply the theme to .chip--set
+.chip--set {
+  @include tokens($chip-chip-set);
+}
+
+$progress-circular-clock-ring: progress-circular-theme(
+  $schema: $light-material-schema,
+  $track-color: var(--ig-surface-500),
+  $fill-color-default: var(--ig-primary-500),
+  $fill-color-warning: var(--ig-warn-500),
+  $fill-color-danger: var(--ig-error-500),
+  $diameter: 12rem
+);
+
+// Apply the theme to .clock-ring
+.clock-ring {
+  @include tokens($progress-circular-clock-ring);
+}
+
+$progress-linear-timeline-bar: progress-linear-theme(
+  $schema: $light-material-schema,
+  $track-color: var(--ig-surface-500),
+  $fill-color-default: var(--ig-info-500),
+  $track-height: 0.9rem
+);
+
+// Apply the theme to .timeline-bar
+.timeline-bar {
+  @include tokens($progress-linear-timeline-bar);
+}
+
+
+$log-grid: grid-theme(
+  $schema: $light-material-schema,
+  $background: var(--ig-surface-500),
+  $foreground: var(--ig-primary-500),
+  $accent-color: var(--ig-primary-500),
+  $header-background: var(--ig-primary-500),
+  $header-text-color: var(--ig-primary-500-contrast),
+  $row-even-background: var(--ig-primary-50),
+  $row-hover-background: var(--ig-primary-100)
+);
+
+// Apply the theme to .log-grid
+.log-grid {
+  @include tokens($log-grid);
+}
+
+// ---------- app ----------
+
+:root {
+  // Large controls: this is read from the back of a room.
+  --ig-size: 3;
+  // Ignite's button type scale defaults to ~13px; nothing on screen goes under 18px.
+  --ig-button-font-size: max(18px, 0.95rem);
+
+  // Short aliases for the deck colours, all palette tokens.
+  --app-navy: var(--ig-primary-500);
+  --app-blue: var(--ig-secondary-500);
+  --app-mid: var(--ig-info-500);
+  --app-pale: var(--ig-primary-50);
+  --app-grey: var(--ig-gray-700);
+  --app-white: var(--ig-surface-500);
+  --app-heading-font: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+
+  // 18px floor for body text; scales up on large screens (21px at 1920 wide).
+  font-size: clamp(18px, 1.1vw, 24px);
+}
+
+// A floated input label drops to 0.75rem, under the 18px floor.
+.igx-input-group--filled .igx-input-group__label,
+.igx-input-group--focused .igx-input-group__label {
+  font-size: max(18px, 0.86rem);
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  font-size: 1rem;
+  color: var(--app-navy);
+  background: var(--app-pale);
+}
+
+button {
+  font-family: inherit;
+}

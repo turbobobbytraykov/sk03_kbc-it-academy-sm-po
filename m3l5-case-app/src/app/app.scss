@@ -1,0 +1,167 @@
+:host {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+}
+
+.topbar {
+  ::ng-deep .igx-navbar {
+    height: auto;
+    min-height: 4.6rem;
+    padding-inline: 1.5rem;
+  }
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  /* Ignite centres the title's children; a brand belongs at the left edge. */
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
+.brand-title {
+  font-family: var(--app-heading-font);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--app-white);
+}
+
+.brand-sub {
+  font-size: 0.875rem;
+  color: var(--app-blue);
+  letter-spacing: 0.04em;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.switcher {
+  button {
+    /* Each tab takes its own width: equal widths clipped "The case" and "Развръзка". */
+    flex: 0 0 auto;
+    font-size: 1.05rem;
+    min-height: 2.9rem;
+    padding-inline: 1.1rem;
+  }
+}
+
+.mini-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-height: 2.9rem;
+  line-height: 1.1;
+}
+
+.mini-time {
+  font-family: var(--app-heading-font);
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mini-state {
+  font-size: 0.875rem;
+  color: var(--app-pale);
+  text-transform: none;
+}
+
+.mini-clock--warning .mini-time { color: var(--ig-warn-500); }
+.mini-clock--error .mini-time { color: var(--ig-error-300); }
+
+.shortcuts {
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: var(--app-grey);
+}
+
+.case-btn {
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  min-height: 2.9rem;
+  padding-inline: 1.4rem;
+}
+
+/* Quiet on purpose: the facilitator needs it, the room does not. */
+.lang-btn {
+  min-width: 0;
+  min-height: 2.9rem;
+  padding-inline: 0.8rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.screen {
+  min-height: 0;
+  overflow: auto;
+  padding: 1.25rem 1.5rem;
+  box-sizing: border-box;
+  background: var(--app-pale);
+}
+
+.screen--action {
+  overflow: hidden;
+}
+
+.case-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.go-btn {
+  font-size: 1.15rem;
+  min-height: 3rem;
+  padding-inline: 1.6rem;
+}
+
+/* The shortcuts line takes the free space, so Reset stays at the far right. */
+.reset-btn {
+  flex: none;
+}
+
+.case-dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2rem;
+  font-family: var(--app-heading-font);
+  font-size: 1.6rem;
+  color: var(--app-navy);
+}
+
+.case-dialog-clock {
+  font-size: 1.1rem;
+  color: var(--app-mid);
+  font-variant-numeric: tabular-nums;
+}
+
+.case-dialog-body {
+  width: min(1760px, 92vw);
+  max-height: 76vh;
+  overflow: auto;
+}
+
+.reset-text {
+  max-width: 34rem;
+  margin: 0;
+  font-size: 1.1rem;
+
+  dt {
+    font-weight: 700;
+    color: var(--app-navy);
+  }
+
+  dd {
+    margin: 0.2rem 0 0.9rem;
+    color: var(--app-grey);
+  }
+}
+

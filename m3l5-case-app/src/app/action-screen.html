@@ -1,0 +1,164 @@
+<!-- Top: the state of the world -->
+<section class="zone-top">
+  <div class="clock" [class]="'clock clock--' + sim.clockPhase()">
+    <igx-circular-bar
+      class="clock-ring"
+      [max]="sim.duration"
+      [value]="sim.remaining()"
+      [type]="circularType()"
+      [animate]="false"
+      [textVisibility]="false"
+    ></igx-circular-bar>
+    <div class="clock-text">
+      <span class="clock-time">{{ sim.remainingLabel() }}</span>
+      <span class="clock-label" [class.clock-label--stopped]="!sim.running()">{{ sim.running() ? t.stateRemaining : sim.finished() ? t.stateTime : t.statePaused }}</span>
+      <span class="clock-elapsed">{{ t.elapsed(sim.elapsedLabel()) }}</span>
+    </div>
+  </div>
+
+  <div class="story-col">
+    <div class="story">
+      <span class="story-label">{{ t.storyTime }}</span>
+      <span class="story-time">{{ sim.storyTime() }}</span>
+      <span class="story-sub">{{ t.weekday }}</span>
+    </div>
+    <button igxButton="flat" type="button" class="btn-quiet btn-reset"
+            [disabled]="sim.elapsed() === 0 && sim.activeIndex() === 0" (click)="sim.resetOpen.set(true)">
+      {{ t.resetClockButton }}
+    </button>
+  </div>
+
+  <!-- The failure rate and how it got here. Moments that have not arrived stay empty: nothing is given away. -->
+  <div class="failing">
+    <span class="failing-label">{{ t.failing }}</span>
+    <span class="failing-value">{{ sim.failureRate() }}</span>
+    <div class="failing-chart"><app-chart [options]="trend()" [label]="trendLabel()" /></div>
+  </div>
+
+  <div class="status">
+    <igx-chips-area class="chips">
+      <igx-chip class="chip" [class.chip--set]="sim.severity()" [disabled]="true">
+        <span class="chip-key">{{ t.severity }}</span> <span class="chip-val">{{ sim.severity() || t.notSet }}</span>
+      </igx-chip>
+      <igx-chip class="chip" [class.chip--set]="sim.classifiedAt()" [disabled]="true">
+        <span class="chip-key">{{ t.classified }}</span>
+        <span class="chip-val">{{ sim.classifiedAt() ? t.classifiedYes(sim.classifiedAt()!) : t.no }}</span>
+      </igx-chip>
+    </igx-chips-area>
+    @if (sim.reportDueBy(); as due) {
+      <p class="report-clock">{{ t.reportClock(due) }}</p>
+    }
+    <div class="world-controls">
+      <igx-input-group type="border" class="severity-input">
+        <label igxLabel for="severity">{{ t.severityInput }}</label>
+        <input igxInput id="severity" name="severity" type="text" autocomplete="off"
+               [ngModel]="sim.severity()" (ngModelChange)="sim.severity.set($event)" />
+      </igx-input-group>
+      <igx-switch [checked]="!!sim.classifiedAt()" (change)="sim.setClassified($event.checked)">
+        {{ t.classified }}
+      </igx-switch>
+    </div>
+  </div>
+
+  <div class="controls">
+    @if (sim.finished()) {
+      <button igxButton="contained" class="btn-reveal btn-accent" (click)="sim.screen.set('reveal')">{{ t.openReveal }}</button>
+    } @else {
+      <button igxButton="contained" class="btn-run" (click)="sim.toggleRunning()">
+        {{ startLabel() }} <kbd class="key">{{ t.spaceKey }}</kbd>
+      </button>
+    }
+    <button igxButton="outlined" [class.btn-held]="sim.held()" [disabled]="!sim.nextMoment()" (click)="sim.toggleHold()">
+      {{ sim.held() ? t.releaseHold : t.hold }}
+    </button>
+    <button igxButton="outlined" [disabled]="!sim.nextMoment()" (click)="sim.advanceNow()">{{ t.advance }}</button>
+    <span class="next-hint" [class.is-overdue]="sim.nextOverdue()">
+      {{ sim.nextOverdue() ? t.held : t.next }} {{ nextLabel() }}
+    </span>
+  </div>
+</section>
+
+<!-- Middle: the only thing that changes -->
+<section class="zone-middle">
+  <igx-card class="moment card-light" [class.is-new]="justArrived()" elevated>
+    <igx-card-content class="moment-body">
+      <header class="moment-head">
+        <span class="moment-num">{{ t.momentOf(sim.activeMoment().id, sim.moments.length) }}</span>
+        <span class="moment-story">{{ sim.activeMoment().storyTime }}</span>
+        @if (justArrived()) {
+          <span class="moment-new">{{ t.justArrived }}</span>
+        }
+      </header>
+      <p class="situation">
+        <!-- one line, no whitespace between segments: they join mid-sentence -->
+        @for (seg of sim.activeMoment().situation; track $index) {<span [class.figure]="seg.strong">{{ seg.text }}</span>}
+      </p>
+      <div class="decision">
+        <span class="decision-label">{{ t.decisionRequired }}</span>
+        <p class="decision-text">{{ sim.activeMoment().decision }}</p>
+        @if (sim.activeMoment().decisionNote; as note) {
+          <p class="decision-note">{{ note }}</p>
+        }
+      </div>
+    </igx-card-content>
+  </igx-card>
+</section>
+
+<!-- Bottom: the timeline and the capture -->
+<section class="zone-bottom">
+  <div class="timeline">
+    <div class="markers">
+      @for (m of markers; track m.id; let i = $index) {
+        <span class="marker" [class]="'marker marker--' + sim.momentStates()[i]" [style.left.%]="m.left">
+          <span class="marker-dot"></span>
+          <span class="marker-text">{{ t.markerPrefix }}{{ m.id }} · {{ m.story }}</span>
+        </span>
+      }
+      <span class="marker marker--end" style="left: 100%">
+        <span class="marker-dot"></span>
+        <span class="marker-text">25:00</span>
+      </span>
+    </div>
+    <igx-linear-bar
+      class="timeline-bar"
+      [max]="sim.duration"
+      [value]="sim.elapsed()"
+      [animate]="false"
+      [textVisibility]="false"
+    ></igx-linear-bar>
+  </div>
+
+  <!-- Text, one click for the role, one click for the verdict. Confirmation appears inline, covering nothing. -->
+  <form class="capture" (submit)="$event.preventDefault()">
+    <div class="capture-row">
+      <igx-input-group type="border" class="capture-text">
+        <label igxLabel for="decision">{{ t.whatDecided }}</label>
+        <input #decisionInput igxInput id="decision" name="decision" type="text" autocomplete="off"
+               [ngModel]="draftText()" (ngModelChange)="draftText.set($event)" />
+      </igx-input-group>
+      <button igxButton="contained" type="button" class="btn-auth" [disabled]="!canLog()" (click)="log(true)">
+        {{ t.authorised }}
+      </button>
+      <button igxButton="contained" type="button" class="btn-unauth btn-danger" [disabled]="!canLog()" (click)="log(false)">
+        {{ t.notAuthorised }}
+      </button>
+    </div>
+    <div class="capture-row capture-row--roles">
+      <span class="capture-label" id="who-decided">{{ t.whoDecided }}</span>
+      <igx-buttongroup class="role-picker" selectionMode="single" aria-labelledby="who-decided">
+        @for (r of sim.roles; track r.id) {
+          <button igxButton type="button" [selected]="draftRole() === r.id" (click)="pickRole(r.id)">{{ r.name }}</button>
+        }
+      </igx-buttongroup>
+      <!-- While a role is picked, what it may and may not do: the verdict is judged against this. -->
+      @if (pickedRole(); as r) {
+        <dl class="perms">
+          <div class="perm"><dt>{{ t.may }}</dt><dd>{{ r.may }}</dd></div>
+          <div class="perm perm--not"><dt>{{ t.mayNot }}</dt><dd>{{ r.mayNot }}</dd></div>
+        </dl>
+      } @else {
+        <app-undo-note class="capture-note" [idle]="idleLine()" />
+      }
+    </div>
+  </form>
+</section>

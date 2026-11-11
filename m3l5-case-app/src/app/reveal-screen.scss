@@ -1,0 +1,144 @@
+:host {
+  display: block;
+}
+
+.reveal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+
+  h1 {
+    // Ignite's typography gives h1 its own margins and line height, which cost a tenth of the screen.
+    margin: 0 !important;
+    font-family: var(--app-heading-font);
+    font-size: 2.2rem;
+    line-height: 1.15;
+    color: var(--app-navy);
+  }
+}
+
+.reveal-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+
+  button {
+    font-size: 1.1rem;
+    min-height: 3rem;
+  }
+}
+
+.progress {
+  font-size: 1.1rem;
+  color: var(--app-grey);
+  margin-right: 0.6rem;
+}
+
+.points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.point-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  padding: 0.6rem 1.4rem !important;
+}
+
+.point-num {
+  flex: none;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--app-mid);
+  color: var(--app-white);
+  font-family: var(--app-heading-font);
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.point-main {
+  flex: 1;
+  min-width: 0;
+}
+
+// A point that has not been shown yet: its number, dimmed, and a dashed outline where it will land.
+.pending {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 1.4rem;
+  border: 2px dashed var(--ig-primary-200);
+  border-radius: 0.4rem;
+
+  .point-num {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.05rem;
+    background: var(--ig-primary-100);
+    color: var(--app-grey);
+  }
+}
+
+// The tally as a bar, on white so it reads the same on the pale card and on the dark current one.
+.tally-chart {
+  display: flex;
+  height: 2.6rem;
+  margin: 0.5rem 0 0.2rem;
+  padding: 0.15rem;
+  border-radius: 0.4rem;
+  background: var(--app-white);
+}
+
+.point-text {
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  color: var(--app-grey);
+
+  strong {
+    color: var(--app-navy);
+  }
+}
+
+.point--current {
+  .point-num {
+    background: var(--app-blue);
+    color: var(--app-navy);
+  }
+
+  .point-text {
+    font-size: 1.6rem;
+    color: var(--app-white);
+
+    strong {
+      color: var(--app-blue);
+    }
+  }
+
+  .tally-line {
+    color: var(--app-white);
+    border-color: var(--app-blue);
+  }
+}
+
+.tally-line {
+  margin: 0.6rem 0 0.2rem;
+  padding-left: 0.9rem;
+  border-left: 4px solid var(--app-mid);
+  font-family: var(--app-heading-font);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--app-navy);
+}
+
+/* Bulgarian wraps the current point to an extra line: a little less space between points keeps all seven on screen. */
+:host-context(html[lang='bg']) .points {
+  gap: 0.35rem;
+}
