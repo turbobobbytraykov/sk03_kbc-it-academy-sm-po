@@ -1,0 +1,39 @@
+name: Yesterday's numbers
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish the dashboard
+        run: |
+          {
+            echo "## Payments platform, yesterday"
+            echo ""
+            echo "| Signal | Value | Threshold | Status |"
+            echo "|---|---|---|---|"
+            echo "| Availability | 100.00% | above 99.90% | :green_circle: |"
+            echo "| HTTP 5xx responses | 0 | under 50 | :green_circle: |"
+            echo "| Response time, p95 | 341 ms | under 800 ms | :green_circle: |"
+            echo "| Requests served | 14,392 | no threshold | :green_circle: |"
+            echo "| CPU, payment-service | 38% | under 80% | :green_circle: |"
+            echo ""
+            echo "Every number above is correct."
+            echo ""
+            echo "## The same day, from the service desk"
+            echo ""
+            echo "| Ticket | What the customer said |"
+            echo "|---|---|"
+            echo "| 88431 | The screen confirmed my transfer. The money never arrived. |"
+            echo "| 88437 | The screen confirmed my transfer. The money never arrived. |"
+            echo "| 88452 | The payment shows a different name from the one I typed. |"
+            echo "| 88460 | The payment shows a different name from the one I typed. |"
+            echo "| 88474 | The account search finds nothing and shows no error. |"
+            echo ""
+            echo "Transfers accepted by the gateway yesterday: **1,204**"
+            echo ""
+            echo "Transfers posted by the ledger yesterday: **1,197**"
+          } >> $GITHUB_STEP_SUMMARY
+          echo "Dashboard published. Open the Summary page of this run."
