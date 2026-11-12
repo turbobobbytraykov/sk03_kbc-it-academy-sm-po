@@ -1,0 +1,32 @@
+name: Trace a payment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  busy-afternoon:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Half an hour of traffic, three services, one log
+        run: |
+          NAMES="Petrov Ivanova Georgiev Dimitrova Kolev Stoyanova Nikolov Angelova"
+          i=0
+          for MIN in $(seq -w 0 29); do
+            for SEC in 11 34; do
+              i=$((i + 1))
+              TRACE=$(printf '%08x' $((0x5f000000 + i * 7919)))
+              ACC=$((4400 + i % 37))
+              NAME=$(echo $NAMES | cut -d' ' -f$(((i % 8) + 1)))
+              printf '14:%s:%s api-gateway     trace=%s POST /transfers customer="%s" status=202\n' "$MIN" "$SEC" "$TRACE" "$NAME"
+              printf '14:%s:%s payment-service trace=%s account=%s validate=ok 41ms\n' "$MIN" "$SEC" "$TRACE" "$ACC"
+              printf '14:%s:%s ledger          trace=%s account=%s posted amount=%s.00 EUR\n' "$MIN" "$SEC" "$TRACE" "$ACC" "$((i * 13 % 880 + 20))"
+            done
+            if [ "$MIN" = "07" ]; then
+              printf '14:07:41 api-gateway     trace=8ac41d02 POST /transfers customer="Dupont, Marie" status=202\n'
+              printf '14:07:41 payment-service trace=8ac41d02 account=4471 validate=ok 39ms\n'
+              printf '14:07:42 payment-service trace=8ac41d02 account=4471 calling ledger (attempt 1)\n'
+              printf '14:07:52 payment-service trace=8ac41d02 account=4471 ledger timeout after 10000ms\n'
+              printf '14:07:53 payment-service trace=8ac41d02 account=4471 calling ledger (attempt 2)\n'
+              printf '14:08:03 payment-service trace=8ac41d02 account=4471 ledger timeout after 10000ms, giving up\n'
+            fi
+          done
