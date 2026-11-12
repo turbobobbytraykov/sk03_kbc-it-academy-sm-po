@@ -1,8 +1,8 @@
 // Inlines the built JS and CSS into one HTML file that works when opened straight from disk
 // (file://), where browsers refuse to load external module scripts. Run after `ng build`.
 //
-// The build has a lazy chunk: ng-apexcharts loads ApexCharts with import(), and so does
-// igniteui-grid-lite for its own parts. A file:// page cannot fetch them, so the
+// The build has lazy chunks: ng-apexcharts loads ApexCharts with import(), and Grid Lite loads
+// floating-ui the same way. A file:// page cannot fetch them, so the
 // built main bundle is bundled once more with esbuild and code splitting off, which pulls every
 // dynamically imported chunk into the same file.
 import { buildSync } from 'esbuild';

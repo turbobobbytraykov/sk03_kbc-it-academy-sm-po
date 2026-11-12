@@ -246,9 +246,10 @@ $flat-button-btn-quiet: flat-button-theme(
   @include tokens($flat-button-btn-quiet);
 }
 
+// error-700: on the grid's hovered and active rows (primary-100) error-500 is 4.1:1, under AA.
 $flat-button-btn-delete: flat-button-theme(
   $schema: $light-material-schema,
-  $foreground: var(--ig-error-500)
+  $foreground: var(--ig-error-700)
 );
 
 // Apply the theme to .btn-delete
@@ -372,25 +373,32 @@ $log-grid: grid-theme(
   // Large controls: this is read from the back of a room.
   --ig-size: 3;
   // Ignite's button type scale defaults to ~13px; nothing on screen goes under 18px.
-  --ig-button-font-size: max(18px, 0.95rem);
+  --ig-button-font-size: 0.95rem;
 
   // Short aliases for the deck colours, all palette tokens.
   --app-navy: var(--ig-primary-500);
   --app-blue: var(--ig-secondary-500);
   --app-mid: var(--ig-info-500);
+  // MID one step darker, for small headings: MID itself is 4.3:1 on white, under AA below large-text size.
+  --app-mid-text: var(--ig-info-700);
   --app-pale: var(--ig-primary-50);
   --app-grey: var(--ig-gray-700);
   --app-white: var(--ig-surface-500);
   --app-heading-font: 'Montserrat', 'Segoe UI', Arial, sans-serif;
 
   // 18px floor for body text; scales up on large screens (21px at 1920 wide).
-  font-size: clamp(18px, 1.1vw, 24px);
+  // The whole layout is drawn in rem, and the root size follows the window: 21px on a 1920x1080 screen,
+  // where nothing is under 18px, and the same proportions on any other 16:9 size. It follows the height
+  // as well as the width, so a browser window with its tabs and address bar showing still fits. A fixed
+  // 18px floor made the page overflow in a 1280x720 window, which is what a 1080p laptop at 150% display
+  // scaling gives the browser; projected, 12px there is the same size on the wall as 18px at 1080p.
+  font-size: clamp(12px, min(1.1vw, 1.955vh), 24px);
 }
 
 // A floated input label drops to 0.75rem, under the 18px floor.
 .igx-input-group--filled .igx-input-group__label,
 .igx-input-group--focused .igx-input-group__label {
-  font-size: max(18px, 0.86rem);
+  font-size: 0.875rem;
 }
 
 html,

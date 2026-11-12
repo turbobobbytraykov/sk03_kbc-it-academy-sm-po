@@ -194,10 +194,11 @@
   .chip-key { color: var(--app-navy); }
 }
 
+// NAVY, not MID: MID on the pale page is 3.9:1, under AA for text this size.
 .report-clock {
   margin: 0;
   font-weight: 600;
-  color: var(--app-mid);
+  color: var(--app-navy);
 }
 
 .world-controls {
@@ -278,7 +279,7 @@
   display: flex;
   align-items: baseline;
   gap: 1rem;
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.35rem;
 }
 
 .moment-num {
@@ -287,7 +288,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--app-mid);
+  color: var(--app-mid-text);
 }
 
 .moment-new {
@@ -333,7 +334,7 @@
 }
 
 .decision {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   flex: none;
   /* Fixed, sized for two lines plus the note: the block's top edge never moves between moments. */
   height: 10rem;
@@ -414,10 +415,12 @@
   background: var(--app-white);
 }
 
+// The dot carries the MID; the text stays NAVY, which MID on the pale page is too faint for.
 .marker--past {
   color: var(--app-mid);
 
   .marker-dot { background: var(--app-mid); }
+  .marker-text { color: var(--app-navy); }
 }
 
 .marker--active {
@@ -449,6 +452,8 @@
 
 .capture-row--roles {
   grid-template-columns: auto auto minmax(0, 1fr);
+  /* Three lines of permissions, whether or not a role is picked. */
+  min-height: 3rem;
 }
 
 .capture-label {
@@ -475,42 +480,44 @@
   padding-inline: 0.65rem;
 }
 
-/* The picked role's permissions, in the slot the confirmation uses when no role is picked. */
+/*
+ * The picked role's permissions, in the slot the confirmation uses when no role is picked. One flowing
+ * line, up to three lines long; the row below reserves that height, so the decision block never moves.
+ */
 .perms {
-  display: grid;
-  gap: 0.1rem;
   min-width: 0;
   margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.2;
-}
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-size: 0.875rem;
+  line-height: 1.15;
+  color: var(--app-navy);
 
-.perm {
-  display: flex;
-  gap: 0.5rem;
-  min-width: 0;
+  dt,
+  dd {
+    display: inline;
+    margin: 0;
+  }
 
   dt {
-    flex: none;
-    min-width: 4.4rem;
+    margin-right: 0.35rem;
+    // "May not" never splits over two lines.
+    white-space: nowrap;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--app-mid);
+    color: var(--app-navy);
   }
 
   dd {
-    margin: 0;
-    min-width: 0;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    color: var(--app-navy);
+    margin-right: 0.8rem;
   }
-}
 
-.perm--not dt {
-  color: var(--ig-error-500);
+  .perm-not {
+    color: var(--ig-error-500);
+  }
 }
 
 .btn-auth,

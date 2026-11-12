@@ -3,6 +3,7 @@
   <div class="clock" [class]="'clock clock--' + sim.clockPhase()">
     <igx-circular-bar
       class="clock-ring"
+      [attr.aria-label]="t.clockAria"
       [max]="sim.duration"
       [value]="sim.remaining()"
       [type]="circularType()"
@@ -121,6 +122,7 @@
     </div>
     <igx-linear-bar
       class="timeline-bar"
+      [attr.aria-label]="t.timelineAria"
       [max]="sim.duration"
       [value]="sim.elapsed()"
       [animate]="false"
@@ -153,8 +155,8 @@
       <!-- While a role is picked, what it may and may not do: the verdict is judged against this. -->
       @if (pickedRole(); as r) {
         <dl class="perms">
-          <div class="perm"><dt>{{ t.may }}</dt><dd>{{ r.may }}</dd></div>
-          <div class="perm perm--not"><dt>{{ t.mayNot }}</dt><dd>{{ r.mayNot }}</dd></div>
+          <dt>{{ t.may }}</dt><dd>{{ r.may }}</dd>
+          <dt class="perm-not">{{ t.mayNot }}</dt><dd>{{ r.mayNot }}</dd>
         </dl>
       } @else {
         <app-undo-note class="capture-note" [idle]="idleLine()" />

@@ -71,7 +71,18 @@
 }
 
 .mini-clock--warning .mini-time { color: var(--ig-warn-500); }
-.mini-clock--error .mini-time { color: var(--ig-error-300); }
+/* Light enough to read on the navy bar: error-300 is under AA there. */
+.mini-clock--error .mini-time { color: var(--ig-error-100); }
+
+/* A heading for screen readers on the screens whose first visible text is not one. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 .shortcuts {
   margin-left: auto;
@@ -139,14 +150,21 @@
 
 .case-dialog-clock {
   font-size: 1.1rem;
-  color: var(--app-mid);
+  /* GREY: MID on white is under AA for text this size. */
+  color: var(--app-grey);
   font-variant-numeric: tabular-nums;
 }
 
 .case-dialog-body {
-  width: min(1760px, 92vw);
-  max-height: 76vh;
+  width: 92vw;
+  max-height: 84vh;
   overflow: auto;
+
+  /* The same panels a touch smaller, so the whole case fits under the dialog's title and button
+     without scrolling at 1920x1080. The smallest text there is 18.9px, so it stays over 18px. */
+  app-case-view {
+    zoom: 0.96;
+  }
 }
 
 .reset-text {

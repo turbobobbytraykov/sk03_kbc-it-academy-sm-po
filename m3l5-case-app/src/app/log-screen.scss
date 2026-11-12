@@ -91,7 +91,8 @@
   gap: 0.3rem;
   padding: 0.1rem 0.6rem 0.1rem 0.4rem;
   border-radius: 1rem;
-  background: var(--app-mid);
+  // NAVY: white on MID is 4.2:1, under AA at the grid's text size.
+  background: var(--app-navy);
   color: var(--app-white);
   font-weight: 700;
   white-space: nowrap;
@@ -148,7 +149,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--app-mid);
+  color: var(--app-mid-text);
 }
 
 // A flex column, so the chart inside gets a height it can measure.
@@ -162,19 +163,19 @@
 .edit-form {
   display: grid;
   gap: 1rem;
-  width: min(62rem, 86vw);
+  width: min(66rem, 88vw);
   padding: 0.4rem 1.5rem 0.2rem;
   --ig-size: 2;
 }
 
+// Label above its buttons: the five role names need the dialog's whole width in Bulgarian.
 .edit-row {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
+  display: grid;
+  gap: 0.3rem;
+  justify-items: start;
 }
 
 .edit-label {
-  min-width: 7.5rem;
   font-size: 0.95rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -190,4 +191,10 @@
   min-height: 2.6rem;
   padding-inline: 1rem;
   flex: 0 0 auto;
+}
+
+// The Bulgarian role names are longer: tighter buttons keep the five on one row of the dialog.
+:host-context(html[lang='bg']) .role-picker button {
+  font-size: 1rem;
+  padding-inline: 0.65rem;
 }

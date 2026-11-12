@@ -1,7 +1,7 @@
 # M3 L5 case app: payment-outage simulation
 
-The facilitator screen for the incident simulation in Module 3 Lesson 5. Angular 22 and Ignite UI
-for Angular 22.2. The brief is in [CLAUDE.md](CLAUDE.md).
+The facilitator screen for the incident simulation in Module 3 Lesson 5. Angular 22, Ignite UI for
+Angular 22.2 and ApexCharts. The brief is in [CLAUDE.md](CLAUDE.md).
 
 ## Run it
 
@@ -21,21 +21,56 @@ npm run serve:dist   # serve the last build without rebuilding
    `m3l5-case-app-bg.html`). It is one self-contained file that runs from `file://` with no network,
    shown in system fonts.
 
-## Charts and the log grid (12 Nov 2026)
+## Screen sizes
 
-- **ApexCharts** (`apexcharts` 8.7.0, `ng-apexcharts` 3.2.0, Community licence, no Premium add-on) draws four
-  static charts, all configured in `src/app/charts.ts`: the failure-rate trend on the action screen, "Who
-  decided, and when" and "Decisions per moment" under the log, and the tally bar in reveal point 2.
-- **Grid Lite** (`igx-grid-lite`, MIT, with the `igniteui-grid-lite` package) holds the log. **Correct** opens
-  an `igx-dialog`. The grid theme was generated with the theming MCP server (`mcp-log/theme-log-grid.md`).
-- On the action screen, picking a role shows what it may and may not do beside the role buttons.
-- **1** to **4** switch screens; **Space** still starts and pauses the clock.
-- `node scripts/shoot.mjs` screenshots every screen and state in Edge and prints layout checks
-  (`URL=http://localhost:4300/bg/` for Bulgarian). Needs `npm run serve:dist`.
-- Not done yet: `apexcharts_validate_config` on the four chart configs, and an axe run.
-- Known in Bulgarian after these changes (no screen scrolls, but three things are clipped): the severity
-  field's label is cut short, the permissions line beside the role buttons ends in an ellipsis, and the
-  edit dialog is wider than a 1920px screen. English has none of these.
+The page is drawn in rem, and the root size follows the window's width and height. It is designed at
+1920x1080, where the root is 21px and no text is under 18px, and it keeps the same proportions in any
+other 16:9 window. Checked with nothing scrolling or clipped at 1920x1080, 1920x950 (a browser window with
+its tabs showing), 1536x864 (a 1080p laptop at 125% display scaling) and 1280x720 (150% scaling).
+
+In a smaller window the text is smaller in CSS pixels: 12px at 1280x720. Projected, that is the same size
+on the wall as 18px at 1080p, because the whole window fills the same screen. Until 12 Nov 2026 the root
+had a fixed 18px floor, and in a 1280x720 window the case page scrolled and the moment card was cut off.
+
+## Charts and the log grid
+
+Added 12 Nov 2026, after a UI review.
+
+- **ApexCharts** (`apexcharts` 8.7.0, `ng-apexcharts` 3.2.0; no Premium add-on is imported) draws four
+  static charts, all configured in `src/app/charts.ts`:
+  - the failure rate at each moment so far, in the Failing tile on the action screen. Moments that have
+    not arrived stay empty, so nothing is given away;
+  - "Who decided, and when" under the log: one lane per role across the 25 minutes, one mark per decision,
+    a circle for authorised and a square for not authorised, with each moment's arrival marked;
+  - "Decisions per moment" under the log;
+  - the tally as a bar in reveal point 2.
+
+  Not authorised is hatched as well as red, so the pair reads without colour. Every config passes the
+  ApexCharts MCP server's `apexcharts_validate_config` (`node scripts/validate-charts.mjs`, answers in
+  `mcp-log/validate-*.md`).
+- **Grid Lite** (`igx-grid-lite`, with the `igniteui-grid-lite` package, both MIT) holds the log, and
+  scrolls inside itself when the log is long. Its theme was generated with the theming MCP server
+  (`mcp-log/theme-log-grid.md`). Two things about it are worked around here:
+  - it hard-codes header and cell text at 0.75rem and 0.8125rem, so the grid is zoomed by 1.2;
+  - it declares no grid, row or cell roles, which axe reports as two critical violations.
+    `src/app/grid-lite-roles.ts` sets them. Remove it when the library does.
+
+## Checks
+
+```bash
+node scripts/shoot.mjs               # every screen and state in Edge: screenshots, layout, text size, axe, watermark, console
+node scripts/check-single-file.mjs   # both single-file builds from file://: charts drawn, no errors, no fetches
+node scripts/validate-charts.mjs     # every chart config through the ApexCharts MCP validator
+```
+
+The first needs the server on :4300 (`npm run serve:dist`); the first two use the installed Microsoft
+Edge through `playwright-core`, so nothing is downloaded. `shoot.mjs` takes `URL=http://localhost:4300/bg/`
+for Bulgarian, `SIZE=1280x720` for another window, `ONLY=log,overlay` for some screens and `OUT=` for
+the folder (default `screenshots/`, which is not committed).
+
+On 12 Nov 2026 all 14 screens and states passed in English and Bulgarian at 1920x1080, and at 1280x720,
+1536x864 and 1920x950: nothing scrolls, nothing is clipped, no text under the floor, no axe violation, no
+trial watermark, no console error, and the only host contacted is Google Fonts.
 
 ## Bulgarian
 
@@ -56,16 +91,21 @@ back paused, as after any refresh). Decisions typed in either language stay as t
 
 ## Facilitating
 
-- **Space** pauses and resumes the clock from any screen (not while typing).
-- **The case** (top right) opens the premise, goal and roles over whatever is on screen. The clock keeps
+- **Space** pauses and resumes the clock from any screen, and **1** to **4** switch screens (not while
+  typing or with a dialog open). The Start button shows the key.
+- **The case** (top right, with the layers icon) opens the premise, goal and roles over whatever is on screen. The clock keeps
   running. Close with Esc, a click outside, or the button.
 - **Hold next moment** stops the next moment arriving; the clock keeps running. **Advance now** pulls
   the next moment in immediately, and can be undone for 12 seconds. A newly arrived moment is flagged
   "Just arrived" and its card glows briefly, so the room looks up.
-- Log a decision: type, click the role, press **Authorised** or **Not authorised**. The confirmation
-  appears inline beside the roles, with **Undo** for 12 seconds; it covers nothing. The Log screen has
-  **Correct** and **Delete** for every entry.
+- Log a decision: type, click the role, press **Authorised** or **Not authorised**. While a role is
+  picked, what it may and may not do shows beside the role buttons, so the verdict can be judged without
+  opening the case. The confirmation appears in the same place, with **Undo** for 12 seconds; it covers
+  nothing. Clicking a role first moves the cursor to the text field.
+- The Log screen has **Correct** (a dialog with the text, the role and the verdict) and **Delete** for
+  every entry. The clock and story time of an entry are never edited.
 - **Reveal**: right arrow / Page Down shows the next point (a presenter clicker works), left goes back.
+  Points still to come show as numbered outlines, so the room sees how many there are.
 - Everything is saved in the browser. A refresh restores the session paused.
 - **Reset clock…** (under the story time) and **Reset…** (on The case screen) open the same choice:
   **Reset the clock** goes back to 25:00 and Moment 1 and keeps the log; **Reset everything** also
@@ -83,7 +123,8 @@ component override. Primary is NAVY with explicit shades (50 = PALE, 400 = MID, 
 NAVY is too dark for Ignite to derive light tints from. Component styles use palette tokens only, through
 the `--app-*` aliases. Theme variants are classes: `btn-accent`, `btn-danger`, `btn-held`,
 `btn-on-dark`, `btn-quiet`, `card-light`, `card-pale`, `card-dark`, plus `role-picker` for the role
-buttons on the action screen.
+buttons and `log-grid` for the log. MID on white or PALE is under AA contrast for small text, so small
+headings use `--app-mid-text` (one step darker) and running text uses NAVY.
 
 ## Publishing to GitHub Pages
 
@@ -95,5 +136,11 @@ course repo and served as is. Enabling Pages is a repo setting: Bobby's call.
 `igniteui-angular` is dual-licensed (see `node_modules/igniteui-angular/LICENSE`): MIT for a listed
 set of components, the Infragistics commercial licence for the rest, grids among them. Every
 component this app uses is on the MIT list: navbar, button group, button, card, chip, circular and
-linear progress, dialog, input group, select, switch, icon. Do not add `igx-grid` and its
-relatives without a licence; `igx-grid-lite` is MIT.
+linear progress, dialog, input group, switch, icon, and `igx-grid-lite`. Do not add `igx-grid` and its
+relatives without a licence. `shoot.mjs` looks for the trial watermark that marks a commercial component.
+
+`apexcharts` and `ng-apexcharts` are dual-licensed (`node_modules/apexcharts/LICENSE.md`): the free
+Community licence covers organisations under USD 2 million a year, counting parents and affiliates, and
+above that a paid per-developer licence applies. Which entity is the licensee is Bobby's call, the same
+open question as in the M3 L4 app. The charts here are static (no toolbar, zoom, tooltip or legend
+toggling), and no Premium add-on is imported.

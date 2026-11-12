@@ -21,8 +21,16 @@ export const CHART_COLORS = {
 } as const;
 
 const FONT = '"Roboto", "Segoe UI", Arial, sans-serif';
-const AXIS_FONT = '16px';
-const LEGEND_FONT = '18px';
+
+/**
+ * ApexCharts takes font sizes in pixels, and the page is drawn in rem with a root size that follows the
+ * window (21px at 1920x1080). So chart text is sized from the root as the page loads: 16px axis labels
+ * and 18px legends at the design size, and in proportion on a smaller window. In Node there is no page.
+ */
+const ROOT_PX = typeof document === 'undefined' ? 21 : parseFloat(getComputedStyle(document.documentElement).fontSize) || 21;
+const px = (atDesignSize: number) => `${((atDesignSize * ROOT_PX) / 21).toFixed(1)}px`;
+const AXIS_FONT = px(16);
+const LEGEND_FONT = px(18);
 
 /** Screen-reader descriptions stay on; chart keyboard navigation would add tab stops that toggle series. */
 const STATIC_A11Y = { enabled: true, keyboard: { enabled: false } };

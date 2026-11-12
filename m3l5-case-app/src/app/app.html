@@ -42,6 +42,7 @@
 <main class="screen" [class]="'screen screen--' + sim.screen()">
   @switch (sim.screen()) {
     @case ('case') {
+      <h1 class="sr-only">{{ t.screens.case }}</h1>
       <app-case-view />
       <div class="case-footer">
         <button igxButton="contained" type="button" class="go-btn" (click)="sim.screen.set('action')">
@@ -53,7 +54,10 @@
         </button>
       </div>
     }
-    @case ('action') { <app-action-screen /> }
+    @case ('action') {
+      <h1 class="sr-only">{{ t.screens.action }}</h1>
+      <app-action-screen />
+    }
     @case ('log') { <app-log-screen /> }
     @case ('reveal') { <app-reveal-screen /> }
   }
@@ -67,7 +71,8 @@
       <span class="case-dialog-clock">{{ sim.remainingLabel() }} · {{ t.storyTimeInline }} {{ sim.storyTime() }}</span>
     </div>
   </igx-dialog-title>
-  <div class="case-dialog-body">
+  <!-- Focusable, so the case can be scrolled from the keyboard on a small screen. -->
+  <div class="case-dialog-body" tabindex="0" role="region" [attr.aria-label]="t.theCase">
     <app-case-view />
   </div>
   <igx-dialog-actions>

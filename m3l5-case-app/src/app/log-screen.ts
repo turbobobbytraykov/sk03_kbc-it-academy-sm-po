@@ -8,6 +8,7 @@ import { IgxGridLiteCellTemplateDirective, IgxGridLiteColumnComponent, IgxGridLi
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IGX_INPUT_GROUP_DIRECTIVES } from 'igniteui-angular/input-group';
 import { AppChart } from './app-chart';
+import { GridLiteRoles } from './grid-lite-roles';
 import { ChartDecision, ChartMoment, decisionsByMoment, decisionsOnClock } from './charts';
 import { T } from './i18n';
 import { formatClock, SimService } from './sim.service';
@@ -49,6 +50,7 @@ interface Row {
     IgxGridLiteCellTemplateDirective,
     IgxIconComponent,
     AppChart,
+    GridLiteRoles,
     UndoNote,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,7 +77,7 @@ interface Row {
     @if (sim.log().length === 0) {
       <p class="empty">{{ t.logEmpty }}</p>
     } @else {
-      <igx-grid-lite class="log-grid" [data]="rows()" [attr.aria-label]="t.logTitle">
+      <igx-grid-lite appGridRoles class="log-grid" [data]="rows()" [attr.aria-label]="t.logTitle">
         <igx-grid-lite-column field="clock" [header]="t.colClock" width="5.2rem" />
         <igx-grid-lite-column field="story" [header]="t.colStory" width="5.2rem" />
         <igx-grid-lite-column field="moment" [header]="t.colMoment" width="5.6rem" />
