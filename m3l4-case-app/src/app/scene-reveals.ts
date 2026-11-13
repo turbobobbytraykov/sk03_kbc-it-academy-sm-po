@@ -50,7 +50,11 @@ export class SceneReveals {
   readonly printerAlert = INCIDENTS.find((i) => i.printer)!;
   readonly realCount = FACTS.instructions;
 
-  /** True once the tile manager has rendered; see the template. */
+  /**
+   * True once the tile manager has finished its first render (its updateComplete promise). Tiles are added
+   * only after this: a tile added to a connected but unrendered manager, with another DOM mutation pending
+   * in the same task, makes the manager throw and stop observing. See the template.
+   */
   readonly ready = signal(false);
   private readonly tileManager = viewChild.required<ElementRef<HTMLElement & { updateComplete?: Promise<unknown> }>>('tileManager');
 

@@ -33,8 +33,12 @@
   @if (shown().size === 0) {
     <p class="empty">{{ t.revealEmpty }}</p>
   }
-  <!-- Always present, and tiles only after its first render: a tile added before the manager has
-       drawn its slot makes igniteui-webcomponents throw ("reading 'assign'"). -->
+  <!-- igc-tile-manager throws "Cannot read properties of null (reading 'assign')" when a tile is added to a
+       manager that is connected but has not rendered yet, while an earlier DOM mutation is still pending in
+       the same task. Entering scene 5 at run time does exactly that, and once it has thrown, the manager
+       stops observing its tiles. So the manager is always in the template, and tiles are added only after
+       its first render (ready(), set in the component after updateComplete). Still present in
+       igniteui-webcomponents 7.5.0-rc.0. -->
   <igc-tile-manager #tileManager class="tiles" column-count="3" gap="16px" resize-mode="none"
                     [style.display]="shown().size ? null : 'none'">
     @if (ready()) {

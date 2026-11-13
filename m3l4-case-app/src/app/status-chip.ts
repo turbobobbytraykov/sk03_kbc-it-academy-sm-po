@@ -21,23 +21,15 @@ const LOOK: Record<Status, { variant: IgxChipTypeVariant | null; icon: string }>
   imports: [IGX_CHIPS_DIRECTIVES, IgxIconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <!-- igx-chip has a "class" input of its own, so a bound [class] never reaches the element.
-         Static class attributes do, hence one branch per look. The content is repeated because
-         the icon must be projected into the chip's prefix slot, which a template outlet cannot do. -->
+    <!-- A whole-value [class] binding is swallowed: igx-chip declares an unused input called "class", so
+         Angular binds the expression to that input and never writes it to the element. A single-class
+         binding, [class.name], is not an input and does reach the element. -->
     <igx-chips-area class="status-area" [attr.aria-label]="text()">
-      @if (status() === 'nodata') {
-        <igx-chip class="status-chip chip-nodata" [tabIndex]="-1">
-          <igx-icon igxPrefix family="app" [name]="look().icon" aria-hidden="true" />
-          <span class="word">{{ word() }}</span>
-          @if (detail()) { <span class="detail">· {{ detail() }}</span> }
-        </igx-chip>
-      } @else {
-        <igx-chip class="status-chip" [variant]="look().variant" [tabIndex]="-1">
-          <igx-icon igxPrefix family="app" [name]="look().icon" aria-hidden="true" />
-          <span class="word">{{ word() }}</span>
-          @if (detail()) { <span class="detail">· {{ detail() }}</span> }
-        </igx-chip>
-      }
+      <igx-chip class="status-chip" [class.chip-nodata]="status() === 'nodata'" [variant]="look().variant" [tabIndex]="-1">
+        <igx-icon igxPrefix family="app" [name]="look().icon" aria-hidden="true" />
+        <span class="word">{{ word() }}</span>
+        @if (detail()) { <span class="detail">· {{ detail() }}</span> }
+      </igx-chip>
     </igx-chips-area>
   `,
   styles: `

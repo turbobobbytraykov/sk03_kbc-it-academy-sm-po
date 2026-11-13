@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { IGX_BUTTON_GROUP_DIRECTIVES } from 'igniteui-angular/button-group';
 import { IGX_DIALOG_DIRECTIVES } from 'igniteui-angular/dialog';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
@@ -22,6 +22,7 @@ import { StateService, Tab } from './state.service';
     CaseView,
     OpsView,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '(document:keydown)': 'onKey($event)' },
   templateUrl: './app.html',

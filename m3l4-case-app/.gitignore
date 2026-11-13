@@ -42,3 +42,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Round 2 before/after screenshots (13 Nov 2026)
+/round2-shots/

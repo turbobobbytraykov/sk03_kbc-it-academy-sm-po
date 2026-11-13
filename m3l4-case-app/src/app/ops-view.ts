@@ -43,7 +43,11 @@ const TOOL_ICON = { Panels: 'tool_panels', Pager: 'tool_pager', Proposals: 'tool
                  [animationDuration]="0" [attr.aria-label]="t.scenesLabel" (activeStepChanging)="onStep($event)">
       @for (s of state.scenes; track s.n) {
         <igx-step [active]="state.scene() === $index">
-          <!-- Explicit: steps made in a @for get no index of their own and show NaN. -->
+          <!-- The indicator is explicit on purpose. igx-step draws "{{ index + 1 }}" by default, but the stepper
+               apparently writes each step's index after the steps have been drawn once, so steps created by an @for
+               show "NaN" until the next change detection (checked on igniteui-angular
+               22.2.6: seven NaN indicators on load, correct after the first key press). Not mentioned in the stepper
+               doc, whose @for examples all give an explicit igxStepIndicator. -->
           <span igxStepIndicator>{{ s.n }}</span>
           <span igxStepTitle class="step-title">{{ s.stepTitle }}</span>
         </igx-step>

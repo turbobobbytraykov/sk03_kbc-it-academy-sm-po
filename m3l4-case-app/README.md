@@ -2,7 +2,8 @@
 
 The page Bobby screen-shares while running the Bangladesh Bank case in Module 3 Lesson 4. Angular 22,
 Ignite UI for Angular 22.2, ApexCharts. The brief is [CLAUDE.md](CLAUDE.md); which MCP tool built what is in
-[BUILD-NOTES.md](BUILD-NOTES.md); the check against the brief's "done" list is [VERIFICATION.md](VERIFICATION.md).
+[BUILD-NOTES.md](BUILD-NOTES.md) (Round 2, 13 Nov 2026: the servers were also called as native tools, with notes in
+[mcp-log/NATIVE-MCP-NOTES.md](mcp-log/NATIVE-MCP-NOTES.md)); the check against the brief's "done" list is [VERIFICATION.md](VERIFICATION.md).
 
 ## Run it
 
@@ -34,10 +35,11 @@ switching keeps the tab, the scene, the votes, the reveals and the scene 3 readi
   unchanged. Where Bulgarian would not fit, the label is shorter rather than the layout smaller: step
   titles, the scene 3 toggle and on-call rows, and proposal C's name as the scene 2 and 7 panel title.
 - `lang="bg"` makes Montserrat use its Bulgarian letterforms, as in the M3 L5 app (Bobby's choice, 4 Nov 2026).
-- `check-text-size.mjs` takes `URL=http://localhost:4400/bg/`. `check-interaction.mjs` asserts English text,
-  and `shoot.mjs` opens the overlay by its English button name, so both run against the English page only.
-  The Bulgarian page was checked on 4 Nov 2026 with a copy of each pointed at `/bg/`: every scene and the
-  overlay fit at 1920x1080 with nothing scrolling, text size passes, and axe reports only what English does.
+- `check-text-size.mjs`, `check-a11y-tree.mjs` and `shoot.mjs` take `URL=http://localhost:4400/bg/`
+  (`shoot.mjs` finds the overlay button by class, so it runs on both pages, and writes to `OUT=<folder>`).
+  `check-interaction.mjs` asserts English text, so it runs against the English page only. The Bulgarian page was
+  checked on 13 Nov 2026: every scene and the overlay fit at 1920x1080 with nothing scrolling, text size passes, and
+  axe reports what English does.
 
 **Screen.** Share a 1920x1080 screen with the browser full screen (F11). Every scene fits there with nothing
 scrolling, and the same layout stays legible for viewers watching the share in a 1280x720 window. A normal
@@ -67,9 +69,11 @@ the scenes scroll: the 18px text floor does not leave room for the whole layout 
 
 ```bash
 node scripts/shoot.mjs               # screenshots: 1920x1080, a 1280x720 window, the 1280x720 share; axe, watermark, network
+                                     # (axe ignores two known Grid Lite false positives; see BUILD-NOTES.md, Known issues)
 node scripts/check-interaction.mjs   # keys, stepper, R, overlay from every scene, refresh, reset, toggle, votes, reveals
 node scripts/check-keyboard.mjs      # tab order and a visible focus ring on every stop
 node scripts/check-text-size.mjs     # no text under 18px, no chart text under 16px, at 1920x1080
+node scripts/check-a11y-tree.mjs     # the browser's accessibility tree: every Grid Lite is a named grid with rows, headers, cells
 node scripts/check-single-file.mjs   # the single-file build from file://, every scene
 node scripts/validate-charts.mjs     # every chart config through the ApexCharts MCP validator
 ```

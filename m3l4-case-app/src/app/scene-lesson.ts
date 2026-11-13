@@ -93,7 +93,8 @@ import { StatusChip } from './status-chip';
       font-weight: 700;
     }
 
-    /* Ignite caps chip text at 32ch, which cuts the Bulgarian role name. */
+    /* Kept: igx-chip caps its text at 32ch by design, and chip-theme has no token for it. That cuts the
+       Bulgarian role name. */
     :host-context(html[lang='bg']) .owner-chip ::ng-deep .igx-chip__content {
       max-width: none;
     }
@@ -102,8 +103,10 @@ import { StatusChip } from './status-chip';
       gap: 0.8rem;
     }
 
-    .rule-input ::ng-deep .igx-input-group__label {
-      font-size: var(--app-small);
+    /* The input-group theme has no token for the label's size. A floated label takes the caption type
+       style, so the documented typography variable sets it (as in the M3 L5 app). */
+    .rule-input {
+      --ig-caption-font-size: var(--app-small);
     }
 
     .rule-input textarea,

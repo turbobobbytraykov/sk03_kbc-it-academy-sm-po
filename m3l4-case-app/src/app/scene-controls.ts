@@ -88,8 +88,11 @@ const DEVICES = [
     .panels {
       flex: 1;
 
+      // The device list needs about 38px more than 2.4fr gave it: the fourth device's "Connected" line sat
+      // under the Illustrative tag. A tile-manager row ratio is the supported lever here (igc-tile-manager
+      // "base" part); the list has no spacing token that gets it there (--ig-spacing shaves 12px at most).
       &::part(base) {
-        grid-template-rows: minmax(0, 2.4fr) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 3.6fr) minmax(0, 1fr);
       }
     }
 

@@ -5,13 +5,13 @@
 }
 
 .topbar {
-  ::ng-deep .igx-navbar {
-    height: auto;
-    min-height: 4.2rem;
-    padding-inline: 1.5rem;
-  }
+  // Round 1 also set the bar's height and side padding with ".topbar .igx-navbar". That rule never matched:
+  // in igniteui-angular 22 the "igx-navbar" class is on the host element itself, which is the same element
+  // that carries "topbar". The bar has always been the library's own 3.5rem with 1rem of padding, so the
+  // rule was removed on 13 Nov 2026 with no visible change. The navbar theme has no size or padding token.
 
-  // The brand reads from the left, like the deck's running head.
+  // Kept: the navbar has no token for title alignment. The brand reads from the left, like the deck's
+  // running head.
   ::ng-deep .igx-navbar__middle {
     justify-content: flex-start;
     text-align: left;
@@ -45,6 +45,10 @@
 }
 
 .switcher button {
+  // Equal widths, but never narrower than the label: "The ops view" did not fit the default equal split and
+  // was clipped by about 12px. Bulgarian sizes each tab to its own label, below.
+  flex: 1 1 0;
+  min-width: 10.2rem;
   font-size: 1.05rem;
   min-height: 2.8rem;
   padding-inline: 1.1rem;
@@ -53,6 +57,7 @@
 /* Equal widths clip "Оперативен изглед": in Bulgarian each tab takes its own width. */
 :host-context(html[lang='bg']) .switcher button {
   flex: 0 0 auto;
+  min-width: 0;
 }
 
 /* Quiet on purpose: the facilitator needs it, the room does not. */

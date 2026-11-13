@@ -62,6 +62,9 @@ igx-list {
   border: 0;
   overflow: visible;
 
+  // Kept: list-theme has no padding or gap token. --ig-size: 1 (above) already picks the supported small
+  // row; --ig-spacing scales the row padding only, not the gap, and reaching 0.3em of padding needs a factor
+  // of about 2 (13 Nov 2026), so it cannot give this look.
   ::ng-deep .igx-list__item-content {
     padding-block: 0.3em;
     gap: 0.8em;

@@ -1,6 +1,6 @@
 # apexcharts / apexcharts_validate_config
 
-Called 2026-11-01T23:42:00.895Z
+Called 2026-11-13T17:18:12.145Z
 
 ## Arguments
 

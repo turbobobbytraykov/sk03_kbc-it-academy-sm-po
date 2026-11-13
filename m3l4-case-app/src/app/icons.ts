@@ -34,17 +34,32 @@ const PATHS: Record<string, string> = {
   input_collapse: 'M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z',
   input_clear:
     'M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+  // igx-chip draws these two from the default family when a chip is selectable or removable.
+  chip_selected: 'M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
 };
 
-/** Ignite components ask for these by their Material name; they are pointed at the same SVGs. */
-const COMPONENT_REFS = ['input_expand', 'input_collapse', 'input_clear'];
+/**
+ * Ignite components ask for their own icons by name in the 'default' family (icon-service doc, "Internal
+ * Usage"), and the material theme resolves those to the Material Icons web font, which this page does not
+ * load. Each one a component in this app can draw is re-pointed at an inline SVG above:
+ *   input-group  input_clear (the clear button)          select / combo  input_expand, input_collapse
+ *   chip         selected, remove (not drawn today: no chip here is selectable or removable)
+ * The chip's "remove" is not in the doc's table, but the template of igx-chip asks for it by that name.
+ */
+const COMPONENT_REFS: Record<string, string> = {
+  input_expand: 'input_expand',
+  input_collapse: 'input_collapse',
+  input_clear: 'input_clear',
+  selected: 'chip_selected',
+  remove: 'input_clear',
+};
 
 export function registerOfflineIcons(icons: IgxIconService) {
   const svg = (d: string) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="${d}"/></svg>`;
   for (const [name, d] of Object.entries(PATHS)) {
     icons.addSvgIconFromText(name, svg(d), 'app');
   }
-  for (const name of COMPONENT_REFS) {
-    icons.setIconRef(name, 'default', { name, family: 'app' });
+  for (const [ref, name] of Object.entries(COMPONENT_REFS)) {
+    icons.setIconRef(ref, 'default', { name, family: 'app' });
   }
 }

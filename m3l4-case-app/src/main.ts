@@ -1,12 +1,13 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { IgcTileManagerComponent, configureTheme, defineComponents } from 'igniteui-webcomponents';
+import { IgcThemeProviderComponent, IgcTileManagerComponent, defineComponents } from 'igniteui-webcomponents';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
 
-// The Panels grid is a web component (MIT, igniteui-webcomponents). The ops view is the only place it
-// and Grid Lite appear, so their theme is the dark Material one; colours come from the --ig-* palette.
-defineComponents(IgcTileManagerComponent);
-configureTheme('material', 'dark');
+// The Panels grid is a web component (MIT, igniteui-webcomponents). Its dark Material theme is scoped to the ops
+// view with <igc-theme-provider> in app.html, not set for the whole page with configureTheme(). Grid Lite did not
+// react to the provider when tried (a bootstrap/light provider changed the tiles and left the grids as they were);
+// it takes its colours from the --ig-* palette variables, which the page's own theme sets.
+defineComponents(IgcTileManagerComponent, IgcThemeProviderComponent);
 
 bootstrapApplication(App, appConfig)
   .catch((err) => console.error(err));

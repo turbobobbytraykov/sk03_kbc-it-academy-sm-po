@@ -4,10 +4,11 @@ The three MCP servers in [.mcp.json](.mcp.json) built this page: `igniteui-cli` 
 `igniteui-theming` for the theme, and `apexcharts` for every chart. Each call's arguments and full answer are
 saved in [mcp-log/](mcp-log/), so any line below can be checked against what the server actually said.
 
-**How the servers were called.** An editor loads `.mcp.json` when a session starts. This project was set up
-in the same session that built it, so the servers were called over stdio with
+**How the servers were called.** Round 1 (1-4 Nov 2026): An editor loads `.mcp.json` when a session starts. This
+project was set up in the same session that built it, so the servers were called over stdio with
 [scripts/mcp-call.mjs](scripts/mcp-call.mjs), which reads the same `.mcp.json`. It is the same protocol and
-the same answers:
+the same answers. Round 2 (13 Nov 2026) called all three servers as native tools of the session; see
+[Round 2](#round-2-13-nov-2026) below and [mcp-log/NATIVE-MCP-NOTES.md](mcp-log/NATIVE-MCP-NOTES.md):
 
 ```bash
 node scripts/mcp-call.mjs apexcharts list
@@ -102,13 +103,42 @@ All ten chart configs pass `apexcharts_validate_config` with no errors and no wa
 
 ## Known issues
 
-- **Grid Lite fails two axe rules inside itself** (`aria-required-children`, `aria-required-parent`):
-  its `igc-virtual-scroll` carries `role="rowgroup"` across a shadow-DOM boundary from the grid. It is in
-  `igniteui-grid-lite` 0.11.0, the latest; the app cannot reach it. Everything else passes axe.
-- **The tile manager throws if a tile arrives before it has rendered** (`Cannot read properties of null
-  (reading 'assign')`, from its own MutationObserver). Scene 5 adds tiles as R is pressed, and opening it with
-  proposals already revealed hit this. The tile manager there is now always present and its tiles wait for its
-  first render; `scripts/check-interaction.mjs` fails on any console error, and three runs were clean.
+- **axe reports two false positives on Grid Lite** (`aria-required-children`, `aria-required-parent`, on its
+  `igc-virtual-scroll`). This is not an accessibility defect in the library. Grid Lite builds its ARIA grid
+  through `ElementInternals` (`igniteui-grid-lite/internal/a11y.js`), which axe-core cannot read, and the one part
+  with an explicit `role="rowgroup"` attribute therefore looks to axe like a rowgroup outside a grid. The
+  browser's accessibility tree shows a `grid` with an accessible name, `row`, `columnheader` and `gridcell`
+  nodes: `scripts/check-a11y-tree.mjs` checks that on every screen with a Grid Lite. `scripts/shoot.mjs` ignores
+  exactly these two rules on exactly that element and fails on every other axe finding. (Corrected 13 Nov 2026;
+  Round 1 wrongly called it a library defect.)
+- **The tile manager throws when a tile is added to it before it has rendered**: `Cannot read properties of null
+  (reading 'assign')` is thrown by `igc-tile-manager` when a tile is added to a manager that is connected but
+  has not rendered yet, while an earlier DOM mutation is still pending in the same task. Entering scene 5 at run
+  time does exactly that, and after the throw the manager stops observing its tiles. Still present in
+  igniteui-webcomponents 7.5.0-rc.0. So the manager is always in the template and its tiles are added after its
+  first render (`ready()` in `scene-reveals.ts`); `scripts/check-interaction.mjs` fails on any console error.
 - **ng-apexcharts loads ApexCharts with `import()`**, so the normal build has lazy chunks. The single-file
   build re-bundles with esbuild and code splitting off, which pulls them in; it was checked from `file://`.
 - **igniteui-angular**: only components on its MIT list. **igniteui-webcomponents** (`igc-tile-manager`): MIT.
+
+## Round 2 (13 Nov 2026)
+
+Aim: use the Ignite UI controls in a cleaner, supported way, and call the three MCP servers as native tools of the
+session, with notes for the Infragistics developers in
+[mcp-log/NATIVE-MCP-NOTES.md](mcp-log/NATIVE-MCP-NOTES.md) (one row per call, and the token table). The look, the
+case content and every number are unchanged; before and after screenshots were compared pixel by pixel, and the
+only differences are the three layout fixes below.
+
+| Change | Native MCP tool behind it | Result |
+|---|---|---|
+| `igniteui-angular` 22.2.4 to **22.2.6** (nothing else changes version; `igniteui-grid-lite` 0.11.0, `igniteui-webcomponents` 7.4.1, `apexcharts` 8.7.0 stay) | `igniteui-cli` `resolve_import` (entry points still resolve) | Build clean, no new warnings |
+| Accessibility check corrected: `shoot.mjs` stops counting the two false positives (only those rules, only on `igc-virtual-scroll` inside `igx-grid-lite`); new `check-a11y-tree.mjs` reads the browser's accessibility tree through CDP | `igniteui-cli` `search_docs`, `get_doc` grid-lite (nothing in the docs on how Grid Lite exposes ARIA; source read instead) | axe: nothing left; tree: grid, rows, column headers, cells on scene 3 and on scene 5 after a reveal |
+| `status-chip.ts`: two duplicated `@if` branches replaced by one `igx-chip` with `[class.chip-nodata]`; comment now states the real behaviour (a whole-value `[class]` is swallowed by the chip's unused `class` input; `[class.x]` is not) | `igniteui-cli` `get_doc` chip and badge, `get_api_reference` IgxChipComponent, `search_docs` | The docs give no non-interactive chip. `igx-badge` is the documented non-interactive status control (role status) but is a compact count/dot/icon indicator, so it would change the screens; not adopted. The `igx-chips-area` wrapper stays |
+| Token pass over every `::ng-deep` rule and every selector that reaches an internal `.igx-*` class | `igniteui-theming` `get_component_design_tokens` (navbar, stepper, banner, list, chip, input-group), `set_size`, `set_spacing`, `read_resource`; `igniteui-cli` `get_doc` | No supported token replaces any of them. One rule was dead and was removed. Every kept rule now carries a comment naming what is missing; the table is in the notes file |
+| Stepper "NaN": removed the explicit `igxStepIndicator` on 22.2.6, screenshotted, restored | `igniteui-cli` `get_doc` stepper, `get_api_reference` IgxStepComponent / IgxStepperComponent | Still reproduces on 22.2.6: seven NaN indicators on load, correct after the first key press. Not documented. The explicit indicator stays, with an accurate comment |
+| `main.ts`: `configureTheme('material', 'dark')` replaced by `<igc-theme-provider>` around the ops view in `app.html` | `igniteui-cli` `get_api_reference` IgcThemeProviderComponent, `resolve_import`, `get_doc` themes-overview (there is no doc for the provider) | Pixel-identical on scenes 1, 2, 3, 5 and 7 and the overlay. The tile manager follows the provider; Grid Lite does not (it takes its colours from the `--ig-*` variables) |
+| Tile manager comment rewritten to state the exact condition | `igniteui-cli` `get_doc` tile-manager | `ready()` guard kept |
+| `icons.ts`: icon references re-pointed for every internal icon a component used here can ask for, adding chip `selected` and `remove` | `igniteui-cli` `get_doc` icon-service | The doc's table omits the chip's `remove`; the chip template asks for it |
+| Three layout defects fixed (English, and checked in Bulgarian), no wording changed: scene 2 device list clipped under the Illustrative tag; scene 3 side column scrolled 27px with the alert read as a finding; "The ops view" tab 12px too narrow | `igniteui-theming` `set_spacing`, `set_size` (tried first; neither reaches the list rows or the card gaps) | Measured before and after at 1920x1080 |
+| How the chips inside Grid Lite cells get their styles | `igniteui-cli` `search_docs`, `search_api` (nothing documented; source read) | See the notes file, item 10 |
+| Two corrections by the supervising session after the token pass |   (typography variables, found by the M3 L5 session); a probe of the built page in Edge | The input label's size now comes from the documented typography variable , not from an override of . The rule  (height and side padding) was removed: it never matched, because in  22 the  class is on the host element, the same one that carries . Screenshots are byte-identical before and after removing it |

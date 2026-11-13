@@ -61,6 +61,8 @@
   color: var(--ops-muted);
 }
 
+// Kept, as for the honesty banner (see ops-view.scss). banner-border-color exists, but only recolours the
+// banner's own bottom border; the 6px left bar is a different shape, so it stays a rule.
 .proposal-banner {
   ::ng-deep .igx-banner {
     min-height: 0;

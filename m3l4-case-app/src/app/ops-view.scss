@@ -11,15 +11,17 @@
   padding: 0.25rem 1rem 0;
   background: var(--ig-surface-700);
 
+  // Kept: there is no input or token to hide the content area of a stepper that is only a scene picker.
   ::ng-deep .igx-stepper__body {
     display: none;
   }
-
-  ::ng-deep .igx-stepper__step-header {
-    padding-block: 0.5rem;
-  }
 }
 
+// Kept: the stepper theme has no token for indicator size or header padding (it has border-radius-indicator and
+// border-radius-step-header, and colours), and --ig-size and --ig-spacing changed nothing on it (13 Nov 2026).
+// The library draws the indicator at about 32px here; this makes it 2rem.
+// (Round 1 also had a padding-block rule on ".igx-stepper__step-header". That class does not exist, the real one
+// is ".igx-step__header", and the library's own padding is already 0.5rem, so the rule was removed.)
 .scene-stepper ::ng-deep .igx-step__indicator {
   width: 2rem;
   height: 2rem;
@@ -35,6 +37,8 @@
 }
 
 // Short screens (a Teams window, 1280x720): only the current scene keeps its title, on one line.
+// Kept: stepType can hide every title ("indicator") but not every title except the current one's, and nothing in the
+// stepper theme or API can, so this reaches the title wrapper and the current-step header class directly.
 @media (max-height: 860px) {
   .scene-stepper {
     ::ng-deep igx-step:not(:has(.igx-step-header--current)) .igx-step__title-wrapper {
@@ -51,6 +55,9 @@
   }
 }
 
+// Kept: banner-theme has banner-background, message-color, border-color, illustration-color and border-radius, and
+// --ig-spacing does nothing to it (13 Nov 2026), so its 1rem block padding (a 74px bar) cannot be trimmed by a
+// token. The actions slot is replaced by an empty one, but its container still takes room, hence display: none.
 .honesty-banner {
   ::ng-deep .igx-banner {
     min-height: 0;

@@ -37,7 +37,11 @@
   @if (state.tab() === 'case') {
     <app-case-view />
   } @else {
-    <app-ops-view />
+    <!-- Scopes the web components' dark Material theme (tile manager) to the ops view. display: contents keeps the
+         layout as it was, since the provider is only a context holder. -->
+    <igc-theme-provider theme="material" variant="dark" style="display: contents">
+      <app-ops-view />
+    </igc-theme-provider>
   }
 </main>
 

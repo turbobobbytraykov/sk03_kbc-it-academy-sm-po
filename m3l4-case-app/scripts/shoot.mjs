@@ -11,7 +11,7 @@ import { createRequire } from 'node:module';
 import { join } from 'node:path';
 
 const root = join(import.meta.dirname, '..');
-const outDir = join(root, 'screenshots');
+const outDir = process.env.OUT ? join(root, process.env.OUT) : join(root, 'screenshots');
 const base = process.env.URL ?? 'http://localhost:4400/';
 const axeSource = readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8');
 const KEY = 'm3l4-case-app/v1';
@@ -40,7 +40,8 @@ const state = (tab, scene, extra = {}) => ({
 });
 const screens = {
   case: { state: state('case', 0) },
-  overlay: { state: state('ops', 2), after: async (page) => page.getByRole('button', { name: 'The case, over this scene' }).click() },
+  // Found by class, not by its English name, so the same script runs against /bg/ too.
+  overlay: { state: state('ops', 2), after: async (page) => page.locator('.case-btn.btn-accent').first().click() },
 };
 for (let i = 1; i <= 7; i++) screens[`ops-${i}`] = { state: state('ops', i - 1) };
 screens['ops-3-finding'] = { state: state('ops', 2, { faultReading: 'finding' }) };
@@ -78,7 +79,11 @@ for (const { w, h, dsf, label } of sizes.filter((s) => (only ? only.includes(s.l
     page.on('pageerror', (e) => errors.push(e.message));
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
 
-    await page.goto(base, { waitUntil: 'networkidle' });
+    // The Google Fonts request can hang for more than 30 s on a slow link; the page is usable without it.
+    await page.goto(base, { waitUntil: 'networkidle', timeout: 60000 }).catch(async () => {
+      await page.waitForLoadState('load');
+      await page.waitForTimeout(4000);
+    });
     if (screen.after) await screen.after(page);
     await page.waitForTimeout(600);
     const file = join(outDir, `${name}-${label}.png`);
@@ -93,9 +98,21 @@ for (const { w, h, dsf, label } of sizes.filter((s) => (only ? only.includes(s.l
     await page.addScriptTag({ content: axeSource });
     const axe = await page.evaluate(async () => {
       const r = await window.axe.run(document, { resultTypes: ['violations'] });
-      return r.violations.map(
-        (v) => `${v.impact} ${v.id} (${v.nodes.length}: ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' / ')})`,
-      );
+      // Two known false positives, and only these (everything else still fails the check):
+      // rules aria-required-parent and aria-required-children, on the igc-virtual-scroll that sits inside
+      // an igx-grid-lite. Grid Lite builds its ARIA grid (grid, row, columnheader, gridcell) through
+      // ElementInternals, which axe-core cannot read; igc-virtual-scroll is the one part carrying an explicit
+      // role="rowgroup" attribute, so axe sees a rowgroup with no grid around it. The browser's accessibility
+      // tree does show the whole grid: scripts/check-a11y-tree.mjs checks that instead.
+      const KNOWN = new Set(['aria-required-parent', 'aria-required-children']);
+      const isGridLiteVirtualScroll = (n) => {
+        const path = n.target.flat();
+        return path.some((s) => /(^|[\s>])igx-grid-lite\b/.test(s)) && /igc-virtual-scroll\s*$/.test(path[path.length - 1]);
+      };
+      return r.violations
+        .map((v) => ({ ...v, nodes: KNOWN.has(v.id) ? v.nodes.filter((n) => !isGridLiteVirtualScroll(n)) : v.nodes }))
+        .filter((v) => v.nodes.length)
+        .map((v) => `${v.impact} ${v.id} (${v.nodes.length}: ${v.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(' / ')})`);
     });
     const watermark = await page.evaluate(() => !!document.querySelector('igc-trial-watermark, igx-trial-watermark'));
 

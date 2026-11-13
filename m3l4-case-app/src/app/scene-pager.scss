@@ -268,3 +268,13 @@
 :host-context(html[lang='bg']) .side {
   gap: 0.45rem;
 }
+
+// English, alert read as a finding: the page card joins the column, which was about 27px taller than its space
+// and scrolled at 1920x1080. A tighter gap (15px) and card padding (12px) take it back, and only in that state.
+:host-context(html:not([lang='bg'])) .side:has(.alert-card--finding) {
+  gap: 0.45rem;
+
+  .ops-panel igx-card-content {
+    padding-block: 0.6rem;
+  }
+}
