@@ -79,7 +79,18 @@ for (const [name, { after, ...state }] of Object.entries(screens)) {
   await page.addScriptTag({ content: axeSource });
   const axe = await page.evaluate(async () => {
     const r = await window.axe.run(document, { resultTypes: ['violations'] });
-    return r.violations.map((v) => `${v.impact} ${v.id} (${v.nodes.length}: ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' / ')})`);
+    // Two known false positives, and only these two. Grid Lite 0.11 gives its roles (grid, row,
+    // columnheader, gridcell) through ElementInternals, which the browser's accessibility tree honours
+    // (scripts/check-a11y-tree.mjs proves it) but axe-core cannot read. Its one explicit role attribute,
+    // rowgroup on <igc-virtual-scroll>, therefore looks parentless and childless to axe. Every other
+    // finding, and these two rules on any other element, still fails the check.
+    const falsePositive = (v, n) =>
+      (v.id === 'aria-required-parent' || v.id === 'aria-required-children') &&
+      n.target.length === 1 && Array.isArray(n.target[0]) && n.target[0].join(' ') === 'igx-grid-lite igc-virtual-scroll';
+    return r.violations
+      .map((v) => ({ ...v, nodes: v.nodes.filter((n) => !falsePositive(v, n)) }))
+      .filter((v) => v.nodes.length)
+      .map((v) => `${v.impact} ${v.id} (${v.nodes.length}: ${v.nodes.slice(0, 2).map((n) => n.target.flat().join(' ')).join(' / ')})`);
   });
   const watermark = await page.evaluate(() => !!document.querySelector('igc-trial-watermark, igx-trial-watermark'));
   console.log(name.padEnd(14), `scroll ${info.scroll}/${info.page}`, info.dialog > 1 ? `DIALOG SCROLLS ${info.dialog}px` : '', info.small.length ? 'small: ' + info.small.join(', ') : '', info.clipped.length ? 'clipped: ' + info.clipped.join(', ') : '', axe.length ? 'axe: ' + axe.join('; ') : '', watermark ? 'TRIAL WATERMARK' : '', errors.length ? 'ERRORS ' + errors.join(' | ') : '');

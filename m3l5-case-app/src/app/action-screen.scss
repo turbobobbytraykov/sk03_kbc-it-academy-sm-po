@@ -62,16 +62,14 @@
   color: var(--app-white);
 }
 
-/* Ignite draws a 2px ring on a white track, which disappears on the pale page from the back of a room. */
-.clock-ring ::ng-deep {
-  .igx-circular-svg__inner {
-    stroke: var(--ig-primary-100);
-    stroke-width: 0.5rem;
-  }
-
-  .igx-circular-svg__outer {
-    stroke-width: 0.5rem;
-  }
+/* Ignite draws a thin ring that disappears on the pale page from the back of a room. The track colour is
+   a theme token (track-color, in styles.scss). The thickness has no token in progress-circular-theme;
+   --stroke-thickness is the documented CSS variable that the ring's own radius and dash maths read.
+   Until 13 Nov 2026 this was a stroke-width override on the internal SVG classes. That left the radius
+   alone, so a 0.5rem stroke spilled outside the SVG and was clipped flat at its four edges. With the
+   variable the whole ring stays inside; 0.4rem keeps the clock digits clear of its inner edge. */
+.clock-ring {
+  --stroke-thickness: 0.4rem;
 }
 
 .clock-elapsed {
@@ -165,15 +163,12 @@
 
 .chip {
   font-size: 1.25rem;
-
-  ::ng-deep .igx-chip__item {
-    height: auto;
-    padding: 0.5rem 1rem;
-  }
-
-  ::ng-deep .igx-chip__content {
-    font-size: 1.25rem;
-  }
+  // The chip theme has no size, padding or text-size token. Three documented CSS variables do the job
+  // (the Chip topic, "Custom sizing", and the Typography topic): the height, the padding scale (item plus
+  // content padding come to 1.5rem a side, as before) and the body-2 text size the chip uses.
+  --ig-chip-size: 2.3437rem;
+  --ig-spacing: 1.2;
+  --ig-body-2-font-size: 1.25rem;
 }
 
 .chip-key {

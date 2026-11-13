@@ -324,9 +324,12 @@ $chip-chip-set: chip-theme(
   @include tokens($chip-chip-set);
 }
 
+// Regenerated 13 Nov 2026 with create_component_theme: track-color replaces the old override of the
+// internal .igx-circular-svg__inner. The ring's thickness has no theme token; see --stroke-thickness
+// in action-screen.scss.
 $progress-circular-clock-ring: progress-circular-theme(
   $schema: $light-material-schema,
-  $track-color: var(--ig-surface-500),
+  $track-color: var(--ig-primary-100),
   $fill-color-default: var(--ig-primary-500),
   $fill-color-warning: var(--ig-warn-500),
   $fill-color-danger: var(--ig-error-500),
@@ -395,10 +398,10 @@ $log-grid: grid-theme(
   font-size: clamp(12px, min(1.1vw, 1.955vh), 24px);
 }
 
-// A floated input label drops to 0.75rem, under the 18px floor.
-.igx-input-group--filled .igx-input-group__label,
-.igx-input-group--focused .igx-input-group__label {
-  font-size: 0.875rem;
+// A floated input label takes the caption type style, 0.75rem, which is under the 18px floor. The input
+// group theme has no token for it; --ig-caption-font-size is the documented typography variable.
+igx-input-group {
+  --ig-caption-font-size: 0.875rem;
 }
 
 html,
@@ -416,4 +419,24 @@ body {
 
 button {
   font-family: inherit;
+}
+
+// Keyboard focus. Ignite's buttons show focus only as a tint of the background (the button themes have
+// focus-visible-background, -foreground and -border-color tokens, but none for an outline), and on the pale
+// page that tint is easy to miss. One ring for every button and link; inputs keep Ignite's own focus border.
+// MID is 3.9:1 on PALE and 4.7:1 on white; BLUE is 2.2:1 on PALE, so it is used only on the navy top bar,
+// where it is strong. Button group items sit edge to edge and clip an outside ring, so theirs is drawn inside.
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--app-mid);
+  outline-offset: 2px;
+}
+
+igx-buttongroup button:focus-visible {
+  outline-offset: -5px;
+}
+
+.topbar button:focus-visible,
+.topbar a:focus-visible {
+  outline-color: var(--app-blue);
 }

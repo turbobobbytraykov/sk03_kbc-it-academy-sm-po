@@ -50,10 +50,16 @@ Added 12 Nov 2026, after a UI review.
   `mcp-log/validate-*.md`).
 - **Grid Lite** (`igx-grid-lite`, with the `igniteui-grid-lite` package, both MIT) holds the log, and
   scrolls inside itself when the log is long. Its theme was generated with the theming MCP server
-  (`mcp-log/theme-log-grid.md`). Two things about it are worked around here:
+  (`mcp-log/theme-log-grid.md`). Two things about it to know:
   - it hard-codes header and cell text at 0.75rem and 0.8125rem, so the grid is zoomed by 1.2;
-  - it declares no grid, row or cell roles, which axe reports as two critical violations.
-    `src/app/grid-lite-roles.ts` sets them. Remove it when the library does.
+  - it **does** expose a full ARIA grid (grid, row, columnheader, gridcell), but through `ElementInternals`
+    (`node_modules/igniteui-grid-lite/internal/a11y.js`), not as attributes. The browser's accessibility tree
+    and a screen reader see it; a DOM inspector and axe-core do not. axe therefore reports
+    `aria-required-parent` and `aria-required-children` on `igc-virtual-scroll` (the one part with an explicit
+    `role="rowgroup"` attribute). Those two findings are false positives. `shoot.mjs` leaves out exactly those
+    two rules on exactly that element, and `scripts/check-a11y-tree.mjs` proves the grid is exposed. Until 13 Nov
+    2026 a directive copied the roles onto the elements as attributes to silence axe; it was never needed for
+    assistive technology and is gone.
 
 ## Checks
 
@@ -61,12 +67,19 @@ Added 12 Nov 2026, after a UI review.
 node scripts/shoot.mjs               # every screen and state in Edge: screenshots, layout, text size, axe, watermark, console
 node scripts/check-single-file.mjs   # both single-file builds from file://: charts drawn, no errors, no fetches
 node scripts/validate-charts.mjs     # every chart config through the ApexCharts MCP validator
+node scripts/check-a11y-tree.mjs     # the browser's accessibility tree: one named grid, rows, column headers, cells
 ```
 
-The first needs the server on :4300 (`npm run serve:dist`); the first two use the installed Microsoft
-Edge through `playwright-core`, so nothing is downloaded. `shoot.mjs` takes `URL=http://localhost:4300/bg/`
+The first and the last need the server on :4300 (`npm run serve:dist`); those two and the second use the
+installed Microsoft Edge through `playwright-core`, so nothing is downloaded. `shoot.mjs` takes `URL=http://localhost:4300/bg/`
 for Bulgarian, `SIZE=1280x720` for another window, `ONLY=log,overlay` for some screens and `OUT=` for
 the folder (default `screenshots/`, which is not committed).
+
+`shoot.mjs` counts every axe finding except the two Grid Lite false positives described above (rules
+`aria-required-parent` and `aria-required-children`, node `igc-virtual-scroll` inside `igx-grid-lite`).
+`check-a11y-tree.mjs` reads the tree through the Chrome DevTools Protocol (`Accessibility.getFullAXTree`) with
+three decisions logged and fails unless it finds exactly one grid with an accessible name, at least four rows, six
+column headers and eighteen grid cells. `URL=http://localhost:4300/bg/` checks Bulgarian.
 
 On 12 Nov 2026 all 14 screens and states passed in English and Bulgarian at 1920x1080, and at 1280x720,
 1536x864 and 1920x950: nothing scrolls, nothing is clipped, no text under the floor, no axe violation, no
@@ -144,3 +157,33 @@ Community licence covers organisations under USD 2 million a year, counting pare
 above that a paid per-developer licence applies. Which entity is the licensee is Bobby's call, the same
 open question as in the M3 L4 app. The charts here are static (no toolbar, zoom, tooltip or legend
 toggling), and no Premium add-on is imported.
+
+## Round 2 (13 Nov 2026)
+
+Aim: use the Ignite UI controls in a cleaner, supported way, and exercise the MCP servers as native tools (round 1
+reached them through `scripts/mcp-call.mjs`). Every native call and what it answered is in
+[`mcp-log/NATIVE-MCP-NOTES.md`](mcp-log/NATIVE-MCP-NOTES.md), with a table of every override that was looked at.
+`igniteui-angular` moved from 22.2.4 to 22.2.6; nothing else changed version (`igniteui-grid-lite` 0.11.0 is still the
+latest stable, ApexCharts stays at 8.7.0). The case content and numbers are untouched. Before and after screenshots at
+1920x1080 are in `round2-shots/` (not committed).
+
+| Change | Native tool behind it |
+|--------|-----------------------|
+| Removed `grid-lite-roles.ts` and its use in the log. axe false positives scoped in `shoot.mjs`; new `check-a11y-tree.mjs`; the Grid Lite notes above corrected | None. This came from reading the library source (roles set through `ElementInternals`) and the browser's accessibility tree. A native `search_docs` for a Grid Lite styling topic returned nothing |
+| Circular progress: track colour is now the `track-color` token in the generated theme in `styles.scss`; the ring's thickness is the documented `--stroke-thickness` variable. This also fixes the ring, which used to be clipped flat at its four edges by its own SVG | theming `get_component_design_tokens`, `create_component_theme`; cli `get_doc circular-progress` |
+| Chips: the height, padding and text-size overrides of `.igx-chip__item` and `.igx-chip__content` are the documented `--ig-chip-size`, `--ig-spacing` and `--ig-body-2-font-size` | theming `get_component_design_tokens`, `set_size`, `set_spacing`, `read_resource`; cli `get_doc chip`, `search_docs` |
+| Floated input label size: `--ig-caption-font-size` on `igx-input-group` instead of a rule on `.igx-input-group__label` | theming `get_component_design_tokens input-group`; cli `search_docs` |
+| Navbar: the `::ng-deep .igx-navbar` rule never matched in v22 (the class is on the host) and is removed. The bar is unchanged | theming `get_component_design_tokens navbar`; cli `get_doc navbar`, `get_api_reference` |
+| Keyboard focus: one `:focus-visible` outline for buttons and links (3px, 2px offset, MID; BLUE on the navy top bar). Ignite's buttons have focus colour tokens but no outline token, and the tint is weak on the pale page | theming `get_component_design_tokens` for the flat, outlined and group buttons |
+| Progress bars and chips: no change. The docs say nothing about an accessible name or about `role="option"` on a read-only chip | cli `get_doc` (linear-progress, chip, interactivity-accessibility-compliance), `get_api_reference` |
+| One chart config validated natively | apexcharts `apexcharts_validate_config`, `apexcharts_list_products` |
+
+`resolve_import` and `get_project_setup_guide` were also tried; the imports it gave match the ones the app already has.
+
+What stays an internal override: only `zoom: 1.2` on the log grid, because Grid Lite hard-codes its text sizes and has
+no token or variable for them. Every other override that reached an `igx-*` internal class was replaced by a theme
+token or a documented CSS variable, or was dead code.
+
+The visible differences in the action screens are the ring (now whole, 0.4rem thick, same track colour) and the focus
+outline when tabbing. Everything else measured the same: chip boxes 236.3 x 49.5 px, bar 90.1 px, labels 21.1 and
+18.5 px.

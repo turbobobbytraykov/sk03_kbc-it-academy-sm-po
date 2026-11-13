@@ -45,3 +45,6 @@ Thumbs.db
 
 # Output of scripts/shoot.mjs
 /screenshots
+
+# Round 2 before/after screenshots
+/round2-shots
